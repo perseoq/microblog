@@ -25,6 +25,10 @@
 microblog/
 ├── main.py                  # crea la app e inicializa extensiones y blueprints
 ├── wsgi.py                  # entrada WSGI / arranque del servidor
+├── gunicorn.conf.py         # configuración de Gunicorn
+├── pytest.ini               # configuración de pytest
+├── migrations/              # migraciones de base de datos (Flask-Migrate)
+├── tests/                   # pruebas automatizadas (pytest)
 ├── RULES.md                 # este documento
 ├── directory_blog.txt       # snapshot del árbol de carpetas
 ├── .env                     # variables de entorno (NO se versiona)
@@ -36,6 +40,7 @@ microblog/
 │   │   ├── forms.py         # formularios WTForms
 │   │   └── middleware.py    # middleware / hooks de petición
 │   ├── core/                # infraestructura y configuración
+│   │   ├── commands.py      # comandos CLI (seed-admin)
 │   │   ├── enviroment.py    # carga de variables de entorno (dotenv)
 │   │   ├── extensions.py    # instancias de extensiones Flask
 │   │   └── settings.py      # clases de configuración
@@ -108,7 +113,9 @@ microblog/
   o `templates/admin/` según su ámbito.
 - Los recursos estáticos se sirven desde `static/` y respetan su subcarpeta:
   `css/`, `js/`, `img/` y `uploads/{docs,imgs,media}/`.
-- No crear carpetas de primer nivel nuevas sin justificación y aprobación explícita.
+- Carpetas de primer nivel con propósito fijo y aprobado: `migrations/` (migraciones de
+  Flask-Migrate) y `tests/` (pruebas con pytest).
+- No crear otras carpetas de primer nivel nuevas sin justificación y aprobación explícita.
 
 ---
 
@@ -216,12 +223,23 @@ Los modelos actuales son la base del dominio y no deben reestructurarse sin nece
 
 ---
 
-## 10. Definición de "hecho"
+## 10. Comandos habituales
+
+- **Desarrollo:** `python wsgi.py` (usa `DEBUG` de la configuración).
+- **Migraciones:** `flask --app wsgi db migrate -m "mensaje"` y `flask --app wsgi db upgrade`.
+- **Crear administrador:** `flask --app wsgi seed-admin`.
+- **Pruebas:** `pytest`.
+- **Producción:** `gunicorn -c gunicorn.conf.py wsgi:app`.
+
+---
+
+## 11. Definición de "hecho"
 
 Una tarea se considera terminada cuando:
 
 1. La aplicación arranca (`python wsgi.py`) y la funcionalidad responde.
-2. Se respetan el patrón de código y la estructura de carpetas.
-3. No se introducen secretos ni código muerto.
-4. El código es legible por otra persona sin explicaciones adicionales.
-5. Los cambios están publicados (**push**) en `https://github.com/perseoq/microblog.git`.
+2. Las pruebas pasan (`pytest`).
+3. Se respetan el patrón de código y la estructura de carpetas.
+4. No se introducen secretos ni código muerto.
+5. El código es legible por otra persona sin explicaciones adicionales.
+6. Los cambios están publicados (**push**) en `https://github.com/perseoq/microblog.git`.

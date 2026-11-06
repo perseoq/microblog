@@ -1,0 +1,57 @@
+import io
+
+from blog.arch.models import Gallery, Image
+from blog.core.extensions import db
+
+
+def test_gallery_requires_login(client):
+    assert client.get('/admin/galleries').status_code == 302
+
+
+def test_gallery_create_and_public(auth_client):
+    response = auth_client.post('/admin/galleries/new', data={
+        'title': 'Viajes',
+        'description': 'fotos',
+    }, follow_redirects=False)
+    assert response.status_code == 302
+
+    album = Gallery.query.filter_by(title='Viajes').first()
+    assert album is not None
+    assert b'Viajes' in auth_client.get('/gallery').data
+    assert auth_client.get(f'/gallery/{album.id}').status_code == 200
+    assert auth_client.get('/gallery/9999').status_code == 404
+
+
+def test_image_upload_and_delete(auth_client, app, tmp_path):
+    app.config['UPLOAD_IMAGE_FOLDER'] = str(tmp_path)
+    auth_client.post('/admin/galleries/new', data={'title': 'Viajes', 'description': ''}, follow_redirects=False)
+    album = Gallery.query.filter_by(title='Viajes').first()
+
+    response = auth_client.post(
+        f'/admin/galleries/{album.id}/upload',
+        data={'image': (io.BytesIO(b'\x89PNG datos'), 'foto.png')},
+        content_type='multipart/form-data',
+        follow_redirects=False,
+    )
+    assert response.status_code == 302
+    image = Image.query.filter_by(gallery_id=album.id).first()
+    assert image is not None
+    assert (tmp_path / image.filename).exists()
+
+    response = auth_client.post(
+        f'/admin/galleries/{album.id}/upload',
+        data={'image': (io.BytesIO(b'texto'), 'malicioso.txt')},
+        content_type='multipart/form-data',
+        follow_redirects=True,
+    )
+    assert 'Archivo no'.encode('utf-8') in response.data
+    assert Image.query.filter_by(gallery_id=album.id).count() == 1
+
+    image_id = image.id
+    filename = image.filename
+    auth_client.post(f'/admin/images/{image_id}/delete', follow_redirects=False)
+    assert db.session.get(Image, image_id) is None
+    assert not (tmp_path / filename).exists()
+
+    auth_client.post(f'/admin/galleries/{album.id}/delete', follow_redirects=False)
+    assert db.session.get(Gallery, album.id) is None

@@ -3,7 +3,8 @@ from flask import Flask
 from markupsafe import Markup
 
 from blog.arch.models import User
-from blog.core.extensions import bc, ckeditor, csrf, db, login, mail
+from blog.core.commands import seed_admin
+from blog.core.extensions import bc, ckeditor, csrf, db, login, mail, migrate
 from blog.core.settings import ProductionConfig
 from blog.views.admin import admin
 from blog.views.auth import auth
@@ -17,10 +18,13 @@ app.config.from_object(ProductionConfig)
 
 bc.init_app(app)
 db.init_app(app)
+migrate.init_app(app, db)
 login.init_app(app)
 mail.init_app(app)
 csrf.init_app(app)
 ckeditor.init_app(app)
+
+app.cli.add_command(seed_admin)
 
 login.login_view = 'auth.login'
 login.login_message_category = 'warning'
