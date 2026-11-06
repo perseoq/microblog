@@ -5,3 +5,5 @@
 .commandcode/**
 .opencode/**
 project/**
+static/uploads/*/*
+!static/uploads/*/empty
