@@ -1,0 +1,63 @@
+.
+├── blog
+│   ├── arch
+│   │   ├── forms.py
+│   │   ├── middleware.py
+│   │   └── models.py
+│   ├── core
+│   │   ├── enviroment.py
+│   │   ├── extensions.py
+│   │   └── settings.py
+│   └── views
+│       ├── auth.py
+│       ├── blog.py
+│       ├── pages.py
+│       └── posts.py
+├── directory_blog.txt
+├── main.py
+├── static
+│   ├── css
+│   │   └── style.css
+│   ├── img
+│   │   └── empty
+│   ├── js
+│   │   ├── effects.js
+│   │   ├── events.js
+│   │   ├── highlight.js
+│   │   └── script.js
+│   └── uploads
+│       ├── docs
+│       │   └── empty
+│       ├── imgs
+│       │   └── empty
+│       └── media
+│           └── empty
+├── templates
+│   ├── admin
+│   │   ├── dashboard.html
+│   │   ├── new_post.html
+│   │   ├── pages_list.html
+│   │   ├── post_list.html
+│   │   ├── posts_list.html
+│   │   ├── profile.html
+│   │   ├── search_by.html
+│   │   ├── settings.html
+│   │   └── tags_list.html
+│   ├── auth
+│   │   ├── login.html
+│   │   └── recovery.html
+│   ├── base
+│   │   ├── base_admin.html
+│   │   ├── base_blog.html
+│   │   └── base_login.html
+│   └── blog
+│       ├── footer.html
+│       ├── header.html
+│       ├── index.html
+│       ├── pages.html
+│       ├── posts.html
+│       ├── search_by.html
+│       └── sidebar.html
+└── wsgi.py
+
+18 directories, 43 files
