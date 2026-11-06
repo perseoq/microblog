@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed, FileRequired
 from wtforms import (
     BooleanField,
     EmailField,
+    FileField,
     PasswordField,
     SelectField,
     SelectMultipleField,
@@ -61,8 +63,8 @@ class PageForm(FlaskForm):
     submit = SubmitField('Submit')
 
 class GalleryForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired(), Length(max=100)])
-    description = TextAreaField('Description', validators=[DataRequired()])
+    title = StringField('Title', validators=[DataRequired(), Length(max=100)])
+    description = TextAreaField('Description', validators=[Optional()])
     submit = SubmitField('Submit')
 
 class ExternalLinkForm(FlaskForm):
@@ -75,7 +77,7 @@ class UploadForm(FlaskForm):
     submit = SubmitField('Upload')
 
 class UploadImageForm(FlaskForm):
-    image = StringField('Image', validators=[DataRequired()])
+    image = FileField('Image', validators=[FileRequired(), FileAllowed({'png', 'jpg', 'jpeg', 'gif', 'webp'}, 'Formato de imagen no permitido.')])
     submit = SubmitField('Upload')
 
 class ImageForm(FlaskForm):

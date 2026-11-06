@@ -1,0 +1,20 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}Nueva galería{% endblock %}
+{% block content %}
+<h1>Nueva galería</h1>
+<form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.title.label }}<br>
+        {{ form.title(size=60) }}
+        {% for error in form.title.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>
+        {{ form.description.label }}<br>
+        {{ form.description(rows=6, cols=60) }}
+        {% for error in form.description.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+<p><a href="{{ url_for('gallery.manage') }}">Volver a galerías</a></p>
+{% endblock %}

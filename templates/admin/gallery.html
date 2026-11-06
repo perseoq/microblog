@@ -1,0 +1,31 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}Galería{% endblock %}
+{% block content %}
+<h1>Galerías</h1>
+<p><a href="{{ url_for('gallery.new') }}">Nueva galería</a></p>
+{% if galleries %}
+    <table>
+        <thead>
+            <tr><th>Título</th><th>Imágenes</th><th>Fecha</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+            {% for album in galleries %}
+                <tr>
+                    <td>{{ album.title }}</td>
+                    <td>{{ album.images|length }}</td>
+                    <td>{{ album.date_created.strftime('%d/%m/%Y') }}</td>
+                    <td>
+                        <a href="{{ url_for('gallery.manage_gallery', gallery_id=album.id) }}">Gestionar</a>
+                        <form method="post" action="{{ url_for('gallery.delete', gallery_id=album.id) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay galerías.</p>
+{% endif %}
+{% endblock %}

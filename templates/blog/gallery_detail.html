@@ -1,0 +1,17 @@
+{% extends 'base/base_blog.html' %}
+{% block title %}{{ gallery.title }}{% endblock %}
+{% block content %}
+<article class="gallery">
+    <h1>{{ gallery.title }}</h1>
+    {% if gallery.description %}<p>{{ gallery.description }}</p>{% endif %}
+</article>
+{% if gallery.images %}
+    <ul class="images">
+        {% for image in gallery.images %}
+            <li><img src="{{ url_for('static', filename=image.url) }}" alt="{{ image.filename }}"></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Esta galería no tiene imágenes.</p>
+{% endif %}
+{% endblock %}

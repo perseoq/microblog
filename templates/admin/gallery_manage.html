@@ -1,0 +1,32 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}{{ gallery.title }}{% endblock %}
+{% block content %}
+<h1>{{ gallery.title }}</h1>
+<p>{{ gallery.description or '' }}</p>
+<h2>Subir imagen</h2>
+<form method="post" enctype="multipart/form-data" action="{{ url_for('gallery.upload', gallery_id=gallery.id) }}" novalidate>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.image() }}
+        {% for error in form.image.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+<h2>Imágenes</h2>
+{% if gallery.images %}
+    <ul class="images">
+        {% for image in gallery.images %}
+            <li>
+                <img src="{{ url_for('static', filename=image.url) }}" alt="{{ image.filename }}">
+                <form method="post" action="{{ url_for('gallery.delete_image', image_id=image.id) }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button type="submit">Eliminar</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>Esta galería no tiene imágenes.</p>
+{% endif %}
+<p><a href="{{ url_for('gallery.manage') }}">Volver a galerías</a></p>
+{% endblock %}

@@ -83,6 +83,7 @@ class Gallery(db.Model):
     description = db.Column(db.Text, nullable=True)
     date_created = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    images = db.relationship('Image', backref='gallery', lazy=True)
 
     def __repr__(self):
         return f"Gallery('{self.title}', '{self.date_created}')"

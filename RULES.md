@@ -67,14 +67,18 @@ microblog/
     ├── auth/                # autenticación e instalación
     │   ├── login.html
     │   ├── recovery.html
+    │   ├── reset.html
     │   └── install.html
     ├── blog/                # vistas públicas del blog
     │   ├── header.html
     │   ├── footer.html
     │   ├── sidebar.html
+    │   ├── _post_list.html
     │   ├── index.html
     │   ├── posts.html
     │   ├── pages.html
+    │   ├── gallery.html
+    │   ├── gallery_detail.html
     │   └── search_by.html
     └── admin/               # panel de administración
         ├── dashboard.html
@@ -82,11 +86,15 @@ microblog/
         ├── post_list.html
         ├── posts_list.html
         ├── pages_list.html
+        ├── new_page.html
+        ├── categories_list.html
         ├── tags_list.html
+        ├── gallery.html
+        ├── new_gallery.html
+        ├── gallery_manage.html
         ├── profile.html
         ├── settings.html
-        ├── search_by.html
-        └── gallery.html
+        └── search_by.html
 ```
 
 **Reglas de ubicación:**
