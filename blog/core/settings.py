@@ -13,6 +13,8 @@ class Config:
     MAX_CONTENT_LENGTH = 5 * 1024 * 1024
     UPLOAD_IMAGE_FOLDER = 'uploads/imgs'
     ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+    CKEDITOR_SERVE_LOCAL = True
+    CKEDITOR_HEIGHT = 320
 
 class ProductionConfig(Config):
     SQLALCHEMY_DATABASE_URI = SQLALCHEMY_DATABASE_URI

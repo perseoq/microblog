@@ -6,8 +6,8 @@
     <title>{% block title %}microblog{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-    <main>
+<body class="auth">
+    <main id="contenido">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul class="flashes">

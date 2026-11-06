@@ -6,9 +6,10 @@
     <title>{% block title %}microblog{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body class="site">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
     {% include 'blog/header.html' %}
-    <main>
+    <main id="contenido">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 <ul class="flashes">
@@ -21,5 +22,6 @@
         {% block content %}{% endblock %}
     </main>
     {% include 'blog/footer.html' %}
+    <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
 </body>
 </html>

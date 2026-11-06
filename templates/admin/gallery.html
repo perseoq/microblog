@@ -2,7 +2,7 @@
 {% block title %}Galería{% endblock %}
 {% block content %}
 <h1>Galerías</h1>
-<p><a href="{{ url_for('gallery.new') }}">Nueva galería</a></p>
+<p><a class="button" href="{{ url_for('gallery.new') }}">Nueva galería</a></p>
 {% if galleries %}
     <table>
         <thead>

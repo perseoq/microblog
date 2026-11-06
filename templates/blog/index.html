@@ -1,9 +1,11 @@
 {% extends 'base/base_blog.html' %}
 {% block title %}{{ heading or 'microblog' }}{% endblock %}
 {% block content %}
-<section class="posts">
-    <h1>{{ heading or 'Últimas publicaciones' }}</h1>
-    {% include 'blog/_post_list.html' %}
-</section>
-{% include 'blog/sidebar.html' %}
+<div class="layout">
+    <section class="posts">
+        <h1>{{ heading or 'Últimas publicaciones' }}</h1>
+        {% include 'blog/_post_list.html' %}
+    </section>
+    {% include 'blog/sidebar.html' %}
+</div>
 {% endblock %}

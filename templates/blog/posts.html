@@ -4,7 +4,7 @@
 <article class="post">
     <h1>{{ post.title }}</h1>
     <p class="meta">{{ post.date_posted.strftime('%d/%m/%Y') }} · {{ post.category.name }}</p>
-    <div class="content">{{ post.content }}</div>
+    <div class="content">{{ post.content|safe_html }}</div>
 </article>
 <section class="comments">
     <h2>Comentarios</h2>

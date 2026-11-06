@@ -1,3 +1,4 @@
+from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileRequired
 from wtforms import (
@@ -48,7 +49,7 @@ class TagForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
-    content = TextAreaField('Content', validators=[DataRequired()])
+    content = CKEditorField('Content', validators=[DataRequired()])
     category = SelectField('Category', coerce=int, validators=[DataRequired()])
     tags = SelectMultipleField('Tags', coerce=int, validators=[Optional()])
     submit = SubmitField('Submit')
@@ -59,7 +60,7 @@ class CommentForm(FlaskForm):
 
 class PageForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
-    content = TextAreaField('Content', validators=[DataRequired()])
+    content = CKEditorField('Content', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class GalleryForm(FlaskForm):

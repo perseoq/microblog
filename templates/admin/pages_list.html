@@ -2,7 +2,7 @@
 {% block title %}Páginas{% endblock %}
 {% block content %}
 <h1>Páginas</h1>
-<p><a href="{{ url_for('admin.new_page') }}">Nueva página</a></p>
+<p><a class="button" href="{{ url_for('admin.new_page') }}">Nueva página</a></p>
 {% if pages %}
     <table>
         <thead>

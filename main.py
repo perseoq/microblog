@@ -1,4 +1,6 @@
+import bleach
 from flask import Flask
+from markupsafe import Markup
 
 from blog.arch.models import User
 from blog.core.extensions import bc, ckeditor, csrf, db, login, mail
@@ -22,6 +24,32 @@ ckeditor.init_app(app)
 
 login.login_view = 'auth.login'
 login.login_message_category = 'warning'
+
+ALLOWED_HTML_TAGS = [
+    'p', 'br', 'hr', 'strong', 'b', 'em', 'i', 'u', 's', 'blockquote',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'pre', 'code',
+    'a', 'img', 'figure', 'figcaption', 'table', 'thead', 'tbody', 'tr',
+    'th', 'td', 'span', 'div',
+]
+ALLOWED_HTML_ATTRIBUTES = {
+    '*': ['class'],
+    'a': ['href', 'title', 'target', 'rel'],
+    'img': ['src', 'alt', 'title', 'width', 'height'],
+}
+
+
+def sanitize_html(value):
+    cleaned = bleach.clean(
+        value or '',
+        tags=ALLOWED_HTML_TAGS,
+        attributes=ALLOWED_HTML_ATTRIBUTES,
+        protocols=['http', 'https', 'mailto'],
+        strip=True,
+    )
+    return Markup(cleaned)
+
+
+app.jinja_env.filters['safe_html'] = sanitize_html
 
 
 @login.user_loader
