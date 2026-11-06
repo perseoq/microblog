@@ -1,0 +1,16 @@
+<header>
+    <a class="brand" href="{{ url_for('blog.index') }}">microblog</a>
+    <nav>
+        <a href="{{ url_for('blog.index') }}">Inicio</a>
+        <form action="{{ url_for('blog.search') }}" method="get">
+            <input type="search" name="q" placeholder="Buscar" value="{{ request.args.get('q', '') }}">
+            <button type="submit">Buscar</button>
+        </form>
+        {% if current_user.is_authenticated %}
+            <span>{{ current_user.username }}</span>
+            <a href="{{ url_for('auth.logout') }}">Salir</a>
+        {% else %}
+            <a href="{{ url_for('auth.login') }}">Entrar</a>
+        {% endif %}
+    </nav>
+</header>

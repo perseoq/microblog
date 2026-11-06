@@ -1,6 +1,9 @@
 {% extends 'base/base_blog.html' %}
-{% block title %}microblog{% endblock %}
+{% block title %}{{ heading or 'microblog' }}{% endblock %}
 {% block content %}
-<h1>microblog</h1>
-<p>Bienvenido al blog.</p>
+<section class="posts">
+    <h1>{{ heading or 'Últimas publicaciones' }}</h1>
+    {% include 'blog/_post_list.html' %}
+</section>
+{% include 'blog/sidebar.html' %}
 {% endblock %}

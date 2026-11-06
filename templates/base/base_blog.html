@@ -7,15 +7,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <header>
-        <a href="{{ url_for('blog.index') }}">microblog</a>
-        {% if current_user.is_authenticated %}
-            <span>{{ current_user.username }}</span>
-            <a href="{{ url_for('auth.logout') }}">Salir</a>
-        {% else %}
-            <a href="{{ url_for('auth.login') }}">Entrar</a>
-        {% endif %}
-    </header>
+    {% include 'blog/header.html' %}
     <main>
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -28,5 +20,6 @@
         {% endwith %}
         {% block content %}{% endblock %}
     </main>
+    {% include 'blog/footer.html' %}
 </body>
 </html>

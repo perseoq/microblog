@@ -1,0 +1,9 @@
+{% extends 'base/base_blog.html' %}
+{% block title %}{{ page.title }}{% endblock %}
+{% block content %}
+<article class="page">
+    <h1>{{ page.title }}</h1>
+    <p class="meta">{{ page.date_posted.strftime('%d/%m/%Y') }}</p>
+    <div class="content">{{ page.content }}</div>
+</article>
+{% endblock %}
