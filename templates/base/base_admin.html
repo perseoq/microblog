@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel{% endblock %} · microblog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <a class="brand" href="{{ url_for('admin.dashboard') }}">microblog · panel</a>
+        <nav>
+            <a href="{{ url_for('admin.posts') }}">Posts</a>
+            <a href="{{ url_for('admin.pages') }}">Páginas</a>
+            <a href="{{ url_for('admin.categories') }}">Categorías</a>
+            <a href="{{ url_for('admin.tags') }}">Etiquetas</a>
+            <a href="{{ url_for('admin.profile') }}">Perfil</a>
+            <a href="{{ url_for('admin.settings') }}">Ajustes</a>
+            <a href="{{ url_for('blog.index') }}">Ver sitio</a>
+            <a href="{{ url_for('auth.logout') }}">Salir</a>
+        </nav>
+    </header>
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                    {% for category, message in messages %}
+                        <li class="flash {{ category }}">{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

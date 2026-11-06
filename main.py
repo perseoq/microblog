@@ -3,6 +3,7 @@ from flask import Flask
 from blog.arch.models import User
 from blog.core.extensions import bc, ckeditor, csrf, db, login, mail
 from blog.core.settings import ProductionConfig
+from blog.views.admin import admin
 from blog.views.auth import auth
 from blog.views.blog import blog
 from blog.views.gallery import gallery
@@ -29,6 +30,7 @@ def load_user(user_id):
 
 
 app.register_blueprint(auth)
+app.register_blueprint(admin)
 app.register_blueprint(blog)
 app.register_blueprint(posts)
 app.register_blueprint(pages)

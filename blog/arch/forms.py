@@ -1,6 +1,15 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, SubmitField, EmailField, PasswordField, BooleanField
-from wtforms.validators import DataRequired, EqualTo, Length
+from wtforms import (
+    BooleanField,
+    EmailField,
+    PasswordField,
+    SelectField,
+    SelectMultipleField,
+    StringField,
+    SubmitField,
+    TextAreaField,
+)
+from wtforms.validators import DataRequired, EqualTo, Length, Optional
 
 class LoginForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(max=120)])
@@ -38,6 +47,8 @@ class TagForm(FlaskForm):
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
     content = TextAreaField('Content', validators=[DataRequired()])
+    category = SelectField('Category', coerce=int, validators=[DataRequired()])
+    tags = SelectMultipleField('Tags', coerce=int, validators=[Optional()])
     submit = SubmitField('Submit')
 
 class CommentForm(FlaskForm):
@@ -91,3 +102,14 @@ class AdminForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(max=120)])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+class ProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(max=20)])
+    email = EmailField('Email', validators=[DataRequired(), Length(max=120)])
+    submit = SubmitField('Save')
+
+class ChangePasswordForm(FlaskForm):
+    current_password = PasswordField('Current Password', validators=[DataRequired()])
+    new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=8)])
+    confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('new_password')])
+    submit = SubmitField('Change Password')

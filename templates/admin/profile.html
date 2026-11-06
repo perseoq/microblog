@@ -1,0 +1,40 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}Perfil{% endblock %}
+{% block content %}
+<h1>Perfil</h1>
+<h2>Datos</h2>
+<form method="post" action="{{ url_for('admin.profile') }}" novalidate>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.username.label }}<br>
+        {{ form.username(size=40) }}
+        {% for error in form.username.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>
+        {{ form.email.label }}<br>
+        {{ form.email(size=40) }}
+        {% for error in form.email.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+<h2>Contraseña</h2>
+<form method="post" action="{{ url_for('admin.change_password') }}" novalidate>
+    {{ password_form.hidden_tag() }}
+    <p>
+        {{ password_form.current_password.label }}<br>
+        {{ password_form.current_password(size=40) }}
+        {% for error in password_form.current_password.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>
+        {{ password_form.new_password.label }}<br>
+        {{ password_form.new_password(size=40) }}
+        {% for error in password_form.new_password.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>
+        {{ password_form.confirm.label }}<br>
+        {{ password_form.confirm(size=40) }}
+        {% for error in password_form.confirm.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ password_form.submit() }}</p>
+</form>
+{% endblock %}

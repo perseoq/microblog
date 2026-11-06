@@ -1,0 +1,35 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}Posts{% endblock %}
+{% block content %}
+<h1>Posts</h1>
+<p><a href="{{ url_for('admin.new_post') }}">Nuevo post</a></p>
+<form action="{{ url_for('admin.search') }}" method="get">
+    <input type="search" name="q" value="{{ request.args.get('q', '') }}" placeholder="Buscar posts">
+    <button type="submit">Buscar</button>
+</form>
+{% if posts %}
+    <table>
+        <thead>
+            <tr><th>Título</th><th>Categoría</th><th>Fecha</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+            {% for post in posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.category.name }}</td>
+                    <td>{{ post.date_posted.strftime('%d/%m/%Y') }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.edit_post', post_id=post.id) }}">Editar</a>
+                        <form method="post" action="{{ url_for('admin.delete_post', post_id=post.id) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay posts.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}Páginas{% endblock %}
+{% block content %}
+<h1>Páginas</h1>
+<p><a href="{{ url_for('admin.new_page') }}">Nueva página</a></p>
+{% if pages %}
+    <table>
+        <thead>
+            <tr><th>Título</th><th>Fecha</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+            {% for page in pages %}
+                <tr>
+                    <td>{{ page.title }}</td>
+                    <td>{{ page.date_posted.strftime('%d/%m/%Y') }}</td>
+                    <td>
+                        <a href="{{ url_for('admin.edit_page', page_id=page.id) }}">Editar</a>
+                        <form method="post" action="{{ url_for('admin.delete_page', page_id=page.id) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button type="submit">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay páginas.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}{{ heading }}{% endblock %}
+{% block content %}
+<h1>{{ heading }}</h1>
+<form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.title.label }}<br>
+        {{ form.title(size=60) }}
+        {% for error in form.title.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>
+        {{ form.category.label }}<br>
+        {{ form.category() }}
+        {% for error in form.category.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>
+        {{ form.tags.label }}<br>
+        {{ form.tags(size=5) }}
+        {% for error in form.tags.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>
+        {{ form.content.label }}<br>
+        {{ form.content(rows=12, cols=70) }}
+        {% for error in form.content.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+<p><a href="{{ url_for('admin.posts') }}">Volver a posts</a></p>
+{% endblock %}

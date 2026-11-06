@@ -8,6 +8,7 @@
         </form>
         {% if current_user.is_authenticated %}
             <span>{{ current_user.username }}</span>
+            <a href="{{ url_for('admin.dashboard') }}">Panel</a>
             <a href="{{ url_for('auth.logout') }}">Salir</a>
         {% else %}
             <a href="{{ url_for('auth.login') }}">Entrar</a>

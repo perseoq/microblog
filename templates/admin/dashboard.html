@@ -1,0 +1,26 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}Panel{% endblock %}
+{% block content %}
+<h1>Panel</h1>
+<ul class="stats">
+    <li>Posts: {{ stats.posts }}</li>
+    <li>Páginas: {{ stats.pages }}</li>
+    <li>Categorías: {{ stats.categories }}</li>
+    <li>Etiquetas: {{ stats.tags }}</li>
+    <li>Comentarios: {{ stats.comments }}</li>
+    <li>Usuarios: {{ stats.users }}</li>
+</ul>
+<h2>Últimos posts</h2>
+{% if recent_posts %}
+    <ul>
+        {% for post in recent_posts %}
+            <li>
+                <a href="{{ url_for('admin.edit_post', post_id=post.id) }}">{{ post.title }}</a>
+                · {{ post.date_posted.strftime('%d/%m/%Y') }}
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay posts.</p>
+{% endif %}
+{% endblock %}

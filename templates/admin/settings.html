@@ -1,0 +1,14 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}Ajustes{% endblock %}
+{% block content %}
+<h1>Ajustes</h1>
+<dl>
+    <dt>DEBUG</dt>
+    <dd>{{ 'Activado' if debug else 'Desactivado' }}</dd>
+    <dt>Servidor de correo</dt>
+    <dd>{{ mail_server or 'Sin configurar' }}</dd>
+    <dt>Base de datos</dt>
+    <dd>{{ database_driver }}</dd>
+</dl>
+<p>Los valores sensibles se configuran mediante variables de entorno (.env).</p>
+{% endblock %}
