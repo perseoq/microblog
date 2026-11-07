@@ -29,6 +29,7 @@ def test_home_lists_post(client, content):
     assert b'Hola Flask' in response.data
     assert b'home-hero' in response.data
     assert b'featured-post' in response.data
+    assert b'site-sidebar' in response.data
 
 
 def test_search(client, content):

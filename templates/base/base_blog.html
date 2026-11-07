@@ -9,20 +9,36 @@
 </head>
 <body class="site">
     <a class="skip-link" href="#contenido">Saltar al contenido</a>
-    {% include 'blog/header.html' %}
-    <main id="contenido">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul class="flashes">
-                    {% for category, message in messages %}
-                        <li class="flash {{ category }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
-    </main>
-    {% include 'blog/footer.html' %}
+    <div class="site-shell">
+        <aside class="site-sidebar" id="site-sidebar">
+            {% include 'blog/header.html' %}
+            {% include 'blog/sidebar.html' %}
+        </aside>
+        <div class="site-body">
+            <div class="site-topbar">
+                <button class="sidebar-toggle" type="button" data-site-sidebar-toggle aria-controls="site-sidebar" aria-expanded="false" aria-label="Abrir menú">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                        <path d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+                <a class="brand" href="{{ url_for('blog.index') }}">microblog</a>
+            </div>
+            <main id="contenido">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for category, message in messages %}
+                                <li class="flash {{ category }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                {% block content %}{% endblock %}
+            </main>
+            {% include 'blog/footer.html' %}
+        </div>
+    </div>
+    <div class="site-overlay" data-site-sidebar-close></div>
     <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
 </body>
 </html>

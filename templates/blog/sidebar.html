@@ -1,38 +1,36 @@
-<aside>
-    {% if categories %}
-        <section>
-            <h2>Categorías</h2>
-            <ul>
-                {% for category in categories %}
-                    <li>
-                        <a href="{{ url_for('blog.category', category_id=category.id) }}">{{ category.name }}</a>
-                        <span class="sidebar-count">{{ category.posts|length }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
-        </section>
-    {% endif %}
-    {% if tags %}
-        <section>
-            <h2>Etiquetas</h2>
-            <ul>
-                {% for tag in tags %}
-                    <li>
-                        <a href="{{ url_for('blog.tag', tag_id=tag.id) }}">{{ tag.name }}</a>
-                        <span class="sidebar-count">{{ tag.posts|length }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
-        </section>
-    {% endif %}
-    {% if pages %}
-        <section>
-            <h2>Páginas</h2>
-            <ul>
-                {% for page in pages %}
-                    <li><a href="{{ url_for('pages.detail', page_id=page.id) }}">{{ page.title }}</a></li>
-                {% endfor %}
-            </ul>
-        </section>
-    {% endif %}
-</aside>
+{% if categories %}
+    <section>
+        <h2>Categorías</h2>
+        <ul>
+            {% for category in categories %}
+                <li>
+                    <a href="{{ url_for('blog.category', category_id=category.id) }}">{{ category.name }}</a>
+                    <span class="sidebar-count">{{ category.posts|length }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endif %}
+{% if tags %}
+    <section>
+        <h2>Etiquetas</h2>
+        <ul>
+            {% for tag in tags %}
+                <li>
+                    <a href="{{ url_for('blog.tag', tag_id=tag.id) }}">{{ tag.name }}</a>
+                    <span class="sidebar-count">{{ tag.posts|length }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endif %}
+{% if pages %}
+    <section>
+        <h2>Páginas</h2>
+        <ul>
+            {% for page in pages %}
+                <li><a href="{{ url_for('pages.detail', page_id=page.id) }}">{{ page.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </section>
+{% endif %}

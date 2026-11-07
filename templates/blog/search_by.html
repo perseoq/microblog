@@ -1,12 +1,9 @@
 {% extends 'base/base_blog.html' %}
 {% block title %}Buscar{% endblock %}
 {% block content %}
-<div class="layout">
-    <section class="posts">
-        <h1>Resultados para "{{ query }}"</h1>
-        {% set empty_message = 'Sin resultados.' %}
-        {% include 'blog/_post_list.html' %}
-    </section>
-    {% include 'blog/sidebar.html' %}
-</div>
+<section class="posts">
+    <h1>Resultados para "{{ query }}"</h1>
+    {% set empty_message = 'Sin resultados.' %}
+    {% include 'blog/_post_list.html' %}
+</section>
 {% endblock %}
