@@ -24,7 +24,7 @@
             <li class="content-row">
                 <div class="content-row-main">
                     <h2 class="content-row-title"><a href="{{ url_for('admin.edit_post', post_id=post.id) }}">{{ post.title }}</a></h2>
-                    <p class="content-row-meta">{{ post.category.name }} · {{ post.date_posted.strftime('%d/%m/%Y') }}</p>
+                    <p class="content-row-meta">{{ post.category.name }} · {{ post.date_posted.strftime('%d/%m/%Y') }} · <span class="status-badge {{ 'is-on' if post.status == 'published' else 'is-off' }}">{{ 'Publicado' if post.status == 'published' else 'Borrador' }}</span></p>
                 </div>
                 <div class="content-row-actions">
                     <a class="button-ghost" href="{{ url_for('admin.edit_post', post_id=post.id) }}">Editar</a>

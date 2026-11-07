@@ -1,12 +1,14 @@
+import os
+
 import bleach
-from flask import Flask
+from flask import Flask, request
 from markupsafe import Markup
 
 from blog.arch.models import User
 from blog.core.commands import seed_admin
 from blog.core.database import ensure_database
 from blog.core.extensions import bc, ckeditor, csrf, db, login, mail, migrate
-from blog.core.settings import ProductionConfig
+from blog.core.settings import DevelopmentConfig, ProductionConfig
 from blog.core.site import get_site_config
 from blog.views.admin import admin
 from blog.views.auth import auth
@@ -16,7 +18,8 @@ from blog.views.pages import pages
 from blog.views.posts import posts
 
 app = Flask(__name__)
-app.config.from_object(ProductionConfig)
+config_class = DevelopmentConfig if os.getenv('DEBUG') == 'True' else ProductionConfig
+app.config.from_object(config_class)
 
 bc.init_app(app)
 db.init_app(app)
@@ -62,6 +65,31 @@ app.jinja_env.filters['safe_html'] = sanitize_html
 @app.context_processor
 def inject_site_config():
     return {'site': get_site_config()}
+
+
+@app.after_request
+def add_security_headers(response):
+    response.headers.setdefault('X-Content-Type-Options', 'nosniff')
+    response.headers.setdefault('X-Frame-Options', 'DENY')
+    response.headers.setdefault('Referrer-Policy', 'strict-origin-when-cross-origin')
+    response.headers.setdefault('Permissions-Policy', 'geolocation=(), microphone=(), camera=()')
+    response.headers.setdefault(
+        'Content-Security-Policy',
+        "default-src 'self'; "
+        "img-src 'self' data: blob:; "
+        "style-src 'self' 'unsafe-inline'; "
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
+        "font-src 'self' data:; "
+        "connect-src 'self'; "
+        "frame-src 'self'; "
+        "frame-ancestors 'none'; "
+        "base-uri 'self'; "
+        "form-action 'self'; "
+        "object-src 'none'",
+    )
+    if request.is_secure:
+        response.headers.setdefault('Strict-Transport-Security', 'max-age=31536000; includeSubDomains')
+    return response
 
 
 @login.user_loader

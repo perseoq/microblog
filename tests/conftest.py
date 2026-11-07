@@ -7,6 +7,7 @@ import pytest
 from main import app as flask_app
 from blog.arch.models import User
 from blog.core.extensions import db
+from blog.core.ratelimit import reset_rate_limits
 
 
 @pytest.fixture
@@ -15,6 +16,7 @@ def app():
         TESTING=True,
         WTF_CSRF_ENABLED=False,
     )
+    reset_rate_limits()
     with flask_app.app_context():
         db.create_all()
         yield flask_app

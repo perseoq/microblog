@@ -1,12 +1,13 @@
 import time
 
-from flask import Blueprint, current_app, flash, redirect, render_template, session, url_for
+from flask import Blueprint, current_app, flash, make_response, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
 
 from blog.arch.forms import InstallForm, LoginForm, RecoverForm, ResetPasswordForm, TOTPForm
 from blog.arch.models import User
 from blog.core.extensions import db, mail
+from blog.core.ratelimit import clear_rate_limit, is_rate_limited
 from blog.core.totp import verify_code
 
 auth = Blueprint('auth', __name__)
@@ -32,10 +33,17 @@ def _clear_pending_2fa():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('blog.index'))
+    limit_key = f"login:{request.remote_addr or 'unknown'}"
+    if request.method == 'POST' and is_rate_limited(limit_key, limit=10, window=300):
+        flash('Demasiados intentos. Espera unos minutos e inténtalo de nuevo.', 'danger')
+        response = make_response(render_template('auth/login.html', form=LoginForm()), 429)
+        response.headers['Retry-After'] = '300'
+        return response
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user and user.check_password(form.password.data):
+            clear_rate_limit(limit_key)
             if user.totp_enabled:
                 session[PENDING_2FA_USER] = user.id
                 session[PENDING_2FA_AT] = time.time()
@@ -61,9 +69,16 @@ def verify_2fa():
     if user is None or not user.totp_enabled:
         _clear_pending_2fa()
         return redirect(url_for('auth.login'))
+    limit_key = f"2fa:{request.remote_addr or 'unknown'}"
     form = TOTPForm()
+    if request.method == 'POST' and is_rate_limited(limit_key, limit=10, window=300):
+        flash('Demasiados intentos. Espera unos minutos e inténtalo de nuevo.', 'danger')
+        response = make_response(render_template('auth/verify_2fa.html', form=form), 429)
+        response.headers['Retry-After'] = '300'
+        return response
     if form.validate_on_submit():
         if verify_code(user.totp_secret, form.code.data):
+            clear_rate_limit(limit_key)
             remember = session.get(PENDING_2FA_REMEMBER, False)
             _clear_pending_2fa()
             login_user(user, remember=remember)
@@ -83,6 +98,12 @@ def logout():
 def recover():
     if current_user.is_authenticated:
         return redirect(url_for('blog.index'))
+    limit_key = f"recover:{request.remote_addr or 'unknown'}"
+    if request.method == 'POST' and is_rate_limited(limit_key, limit=5, window=900):
+        flash('Demasiados intentos. Espera unos minutos e inténtalo de nuevo.', 'danger')
+        response = make_response(render_template('auth/recovery.html', form=RecoverForm()), 429)
+        response.headers['Retry-After'] = '900'
+        return response
     form = RecoverForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()

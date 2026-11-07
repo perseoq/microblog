@@ -1,12 +1,15 @@
+from blog.core.enviroment import SECRET_KEY
 from blog.core.extensions import bc, db
 from flask_login import UserMixin
+from sqlalchemy_utils import StringEncryptedType
+from sqlalchemy_utils.types.encrypted.encrypted_type import AesEngine
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(60), nullable=False)
-    totp_secret = db.Column(db.String(32), nullable=True)
+    totp_secret = db.Column(StringEncryptedType(db.String(255), SECRET_KEY, AesEngine, 'pkcs5'), nullable=True)
     totp_enabled = db.Column(db.Boolean, nullable=False, default=False, server_default=db.false())
 
     def set_password(self, password):
@@ -41,6 +44,7 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='published', server_default='published')
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.category.name}')"
@@ -66,6 +70,7 @@ class Page(db.Model):
     content = db.Column(db.Text, nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    status = db.Column(db.String(20), nullable=False, default='published', server_default='published')
 
     def __repr__(self):
         return f"Page('{self.title}', '{self.date_posted}')"

@@ -1,4 +1,5 @@
 import pyotp
+from sqlalchemy import text
 
 from blog.arch.models import User
 from blog.core.extensions import db
@@ -74,3 +75,13 @@ def test_totp_setup_requires_login(client):
 def test_verify_without_pending_session(client):
     response = client.get('/login/2fa', follow_redirects=False)
     assert response.status_code == 302
+
+
+def test_totp_secret_encrypted_at_rest(client, user):
+    secret = _enable_totp(user)
+    raw = db.session.execute(
+        text('SELECT totp_secret FROM "user" WHERE id = :id'),
+        {'id': user},
+    ).scalar()
+    assert raw is not None
+    assert secret not in raw

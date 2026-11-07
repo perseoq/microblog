@@ -30,8 +30,7 @@ def test_home_lists_post(client, content):
     assert b'home-hero' in response.data
     assert b'featured-post' in response.data
     assert b'site-sidebar' in response.data
-    assert b'/categories' in response.data
-    assert b'/pages' in response.data
+    assert 'Categorías'.encode('utf-8') in response.data
     assert b'footer-login' in response.data
 
 

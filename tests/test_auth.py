@@ -76,3 +76,12 @@ def test_recover_unknown_email_does_not_send(client, user, monkeypatch):
     response = client.post('/recover', data={'email': 'nadie@example.com'}, follow_redirects=False)
     assert response.status_code == 302
     assert calls == []
+
+
+def test_login_rate_limited(client, user):
+    for _ in range(10):
+        client.post('/login', data={'email': 'ana@example.com', 'password': 'bad'})
+
+    response = client.post('/login', data={'email': 'ana@example.com', 'password': 'bad'})
+    assert response.status_code == 429
+    assert response.headers['Retry-After'] == '300'

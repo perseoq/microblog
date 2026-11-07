@@ -41,6 +41,25 @@ def _post_form_choices(form):
     form.tags.choices = [(t.id, t.name) for t in Tag.query.order_by(Tag.name).all()]
 
 
+def _sync_post_tags(post, selected_ids, raw_names):
+    PostTags.query.filter_by(post_id=post.id).delete()
+    tag_ids = set(selected_ids or [])
+
+    for raw in (raw_names or '').split(','):
+        name = raw.strip()
+        if not name:
+            continue
+        tag = Tag.query.filter_by(name=name[:50]).first()
+        if tag is None:
+            tag = Tag(name=name[:50])
+            db.session.add(tag)
+            db.session.flush()
+        tag_ids.add(tag.id)
+
+    for tag_id in tag_ids:
+        db.session.add(PostTags(post_id=post.id, tag_id=tag_id))
+
+
 @admin.route('/')
 @login_required
 def dashboard():
@@ -74,11 +93,11 @@ def new_post():
             content=form.content.data,
             category_id=form.category.data,
             user_id=current_user.id,
+            status=form.status.data,
         )
         db.session.add(post)
         db.session.flush()
-        for tag_id in form.tags.data:
-            db.session.add(PostTags(post_id=post.id, tag_id=tag_id))
+        _sync_post_tags(post, form.tags.data, form.new_tags.data)
         db.session.commit()
         flash('Post creado.', 'success')
         return redirect(url_for('admin.posts'))
@@ -95,9 +114,8 @@ def edit_post(post_id):
         post.title = form.title.data
         post.content = form.content.data
         post.category_id = form.category.data
-        PostTags.query.filter_by(post_id=post.id).delete()
-        for tag_id in form.tags.data:
-            db.session.add(PostTags(post_id=post.id, tag_id=tag_id))
+        post.status = form.status.data
+        _sync_post_tags(post, form.tags.data, form.new_tags.data)
         db.session.commit()
         flash('Post actualizado.', 'success')
         return redirect(url_for('admin.posts'))
@@ -132,7 +150,12 @@ def pages():
 def new_page():
     form = PageForm()
     if form.validate_on_submit():
-        page = Page(title=form.title.data, content=form.content.data, user_id=current_user.id)
+        page = Page(
+            title=form.title.data,
+            content=form.content.data,
+            user_id=current_user.id,
+            status=form.status.data,
+        )
         db.session.add(page)
         db.session.commit()
         flash('Página creada.', 'success')
@@ -148,6 +171,7 @@ def edit_page(page_id):
     if form.validate_on_submit():
         page.title = form.title.data
         page.content = form.content.data
+        page.status = form.status.data
         db.session.commit()
         flash('Página actualizada.', 'success')
         return redirect(url_for('admin.pages'))

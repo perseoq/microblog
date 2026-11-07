@@ -1,4 +1,4 @@
-from flask import Blueprint, flash, redirect, render_template, url_for
+from flask import Blueprint, abort, flash, redirect, render_template, url_for
 from flask_login import current_user, login_required
 
 from blog.arch.forms import CommentForm
@@ -11,6 +11,8 @@ posts = Blueprint('posts', __name__)
 @posts.route('/post/<int:post_id>')
 def detail(post_id):
     post = db.get_or_404(Post, post_id)
+    if post.status != 'published' and not current_user.is_authenticated:
+        abort(404)
     comments = (
         Comment.query.filter_by(post_id=post.id)
         .order_by(Comment.date_posted.asc())

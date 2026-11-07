@@ -28,6 +28,7 @@ def test_post_crud(auth_client, category):
         'content': 'Cuerpo',
         'category': str(category),
         'tags': [],
+        'status': 'published',
     }, follow_redirects=False)
     assert response.status_code == 302
     post = Post.query.filter_by(title='Nuevo').first()
@@ -38,6 +39,7 @@ def test_post_crud(auth_client, category):
         'content': 'Cuerpo 2',
         'category': str(category),
         'tags': [],
+        'status': 'published',
     }, follow_redirects=False)
     assert response.status_code == 302
     assert db.session.get(Post, post.id).title == 'Editado'
@@ -47,12 +49,39 @@ def test_post_crud(auth_client, category):
     assert db.session.get(Post, post.id) is None
 
 
+def test_post_draft_and_inline_tags(auth_client, category):
+    response = auth_client.post('/admin/posts/new', data={
+        'title': 'Borrador',
+        'content': 'Cuerpo',
+        'category': str(category),
+        'tags': [],
+        'new_tags': 'flask, nuevo',
+        'status': 'draft',
+    }, follow_redirects=False)
+    assert response.status_code == 302
+
+    post = Post.query.filter_by(title='Borrador').first()
+    assert post is not None
+    assert post.status == 'draft'
+    assert {tag.name for tag in post.tags} == {'flask', 'nuevo'}
+    assert b'Borrador' not in auth_client.get('/').data
+    assert b'Borrador' in auth_client.get('/admin/posts').data
+
+
 def test_page_crud(auth_client):
-    auth_client.post('/admin/pages/new', data={'title': 'Pagina', 'content': 'x'}, follow_redirects=False)
+    auth_client.post('/admin/pages/new', data={
+        'title': 'Pagina',
+        'content': 'x',
+        'status': 'published',
+    }, follow_redirects=False)
     page = Page.query.filter_by(title='Pagina').first()
     assert page is not None
 
-    auth_client.post(f'/admin/pages/{page.id}/edit', data={'title': 'Pagina 2', 'content': 'y'}, follow_redirects=False)
+    auth_client.post(f'/admin/pages/{page.id}/edit', data={
+        'title': 'Pagina 2',
+        'content': 'y',
+        'status': 'published',
+    }, follow_redirects=False)
     assert db.session.get(Page, page.id).title == 'Pagina 2'
 
     auth_client.post(f'/admin/pages/{page.id}/delete', follow_redirects=False)

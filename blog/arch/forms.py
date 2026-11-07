@@ -1,6 +1,6 @@
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed, FileRequired, MultipleFileField
+from flask_wtf.file import FileAllowed, FileRequired, FileSize, MultipleFileField
 from wtforms import (
     BooleanField,
     EmailField,
@@ -39,6 +39,9 @@ class InstallForm(FlaskForm):
     submit = SubmitField('Install')
 
 
+POST_STATUS_CHOICES = [('published', 'Publicado'), ('draft', 'Borrador')]
+
+
 class CategoryForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(max=50)])
     submit = SubmitField('Añadir')
@@ -52,6 +55,8 @@ class PostForm(FlaskForm):
     content = CKEditorField('Content', validators=[DataRequired()])
     category = SelectField('Category', coerce=int, validators=[DataRequired()])
     tags = SelectMultipleField('Tags', coerce=int, validators=[Optional()])
+    new_tags = StringField('Nuevas etiquetas', validators=[Optional(), Length(max=200)])
+    status = SelectField('Estado', choices=POST_STATUS_CHOICES, validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class CommentForm(FlaskForm):
@@ -61,6 +66,7 @@ class CommentForm(FlaskForm):
 class PageForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
     content = CKEditorField('Content', validators=[DataRequired()])
+    status = SelectField('Estado', choices=POST_STATUS_CHOICES, validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class GalleryForm(FlaskForm):
@@ -78,7 +84,11 @@ class UploadForm(FlaskForm):
     submit = SubmitField('Upload')
 
 class UploadImageForm(FlaskForm):
-    image = MultipleFileField('Images', validators=[FileRequired(), FileAllowed({'png', 'jpg', 'jpeg', 'gif', 'webp'}, 'Formato de imagen no permitido.')])
+    image = MultipleFileField('Images', validators=[
+        FileRequired(),
+        FileAllowed({'png', 'jpg', 'jpeg', 'gif', 'webp'}, 'Formato de imagen no permitido.'),
+        FileSize(max_size=20 * 1024 * 1024, message='Cada imagen debe pesar menos de 20 MB.'),
+    ])
     submit = SubmitField('Subir imágenes')
 
 class ImageForm(FlaskForm):

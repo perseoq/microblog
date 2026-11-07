@@ -11,6 +11,11 @@
         {% for error in form.title.errors %}<span>{{ error }}</span>{% endfor %}
     </p>
     <p>
+        {{ form.status.label }}<br>
+        {{ form.status() }}
+        {% for error in form.status.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>
         {{ form.content.label }}<br>
         {{ form.content(rows=12, cols=70) }}
         {{ ckeditor.config(name='content') }}
