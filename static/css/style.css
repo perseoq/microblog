@@ -1261,7 +1261,7 @@ td button:hover {
   font-size: .85rem;
 }
 
-.album-delete-form {
+.album-actions .album-delete-form {
   display: inline-flex;
   margin: 0;
   max-width: none;
