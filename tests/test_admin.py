@@ -22,6 +22,16 @@ def test_dashboard(auth_client):
     assert b'Panel' in response.data
 
 
+def test_post_form_has_media_embed_button(auth_client):
+    response = auth_client.get('/admin/posts/new')
+    assert response.status_code == 200
+    assert b'mediaembed' in response.data
+    assert b'MediaEmbed' in response.data
+    assert b'Borrador' in response.data
+    assert b'Publicar' in response.data
+    assert b'name="status"' not in response.data
+
+
 def test_post_crud(auth_client, category):
     response = auth_client.post('/admin/posts/new', data={
         'title': 'Nuevo',
