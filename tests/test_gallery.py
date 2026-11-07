@@ -83,8 +83,8 @@ def test_gallery_list_renders_cards(auth_client):
     assert response.status_code == 200
     assert b'album-card' in response.data
     assert b'Tarjeta' in response.data
-    assert 'Eliminar galería'.encode('utf-8') in response.data
-    assert b'button-link-danger' in response.data
+    assert b'>Eliminar</button>' in response.data
+    assert b'button-danger' in response.data
 
 
 def test_gallery_browser_lists_images(auth_client, app):

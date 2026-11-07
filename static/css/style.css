@@ -1149,7 +1149,7 @@ td button:hover {
 
 .album-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
@@ -1249,47 +1249,35 @@ td button:hover {
 }
 
 .album-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
   margin-top: 10px;
 }
 
-.album-actions .button {
-  padding: 7px 14px;
-  font-size: .82rem;
+.album-actions .button,
+.album-delete-form .button {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: .8rem;
+  white-space: nowrap;
 }
 
 .album-delete-form {
-  display: inline-flex;
+  display: flex;
   margin: 0;
   max-width: none;
 }
 
-.button-link-danger {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 8px;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  color: var(--danger);
-  font-size: .8rem;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.button-link-danger svg {
-  width: 15px;
-  height: 15px;
-}
-
-.button-link-danger:hover {
+.button-danger {
   background: var(--danger-soft);
   color: var(--danger);
+  border-color: transparent;
+}
+
+.button-danger:hover {
+  background: var(--danger);
+  color: #ffffff;
 }
 
 @media (max-width: 560px) {
