@@ -1142,6 +1142,124 @@ td button:hover {
   height: 16px;
 }
 
+.page-header h1 .count-badge {
+  vertical-align: middle;
+  font-size: .72rem;
+}
+
+.album-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.album-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: box-shadow .15s ease;
+}
+
+.album-card:hover {
+  box-shadow: var(--shadow);
+}
+
+.album-cover {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  background: var(--surface-alt);
+  overflow: hidden;
+}
+
+.album-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .25s ease;
+}
+
+.album-card:hover .album-cover img {
+  transform: scale(1.03);
+}
+
+.album-cover-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--muted);
+}
+
+.album-cover-empty svg {
+  width: 32px;
+  height: 32px;
+}
+
+.album-count {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  background: rgba(0, 0, 0, .6);
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: .75rem;
+  font-weight: 600;
+}
+
+.album-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+  padding: 14px 16px 16px;
+}
+
+.album-body h2 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.album-body h2 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.album-body h2 a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.album-description {
+  flex: 1;
+  color: var(--muted);
+  font-size: .86rem;
+  margin: 0;
+}
+
+.album-meta {
+  color: var(--muted);
+  font-size: .78rem;
+  margin: 0;
+}
+
+.album-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.album-actions .button {
+  padding: 7px 14px;
+  font-size: .85rem;
+}
+
 @media (max-width: 560px) {
   .inline-form {
     flex-direction: column;

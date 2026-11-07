@@ -76,6 +76,16 @@ def test_gallery_manage_page_has_upload_preview(auth_client, app):
     assert b'multiple' in response.data
 
 
+def test_gallery_list_renders_cards(auth_client):
+    auth_client.post('/admin/galleries/new', data={'title': 'Tarjeta', 'description': 'desc'}, follow_redirects=False)
+
+    response = auth_client.get('/admin/galleries')
+    assert response.status_code == 200
+    assert b'album-card' in response.data
+    assert b'Tarjeta' in response.data
+    assert 'Eliminar galería Tarjeta'.encode('utf-8') in response.data
+
+
 def test_gallery_browser_lists_images(auth_client, app):
     user = User.query.first()
     album = Gallery(title='Browser', description='', user_id=user.id)
