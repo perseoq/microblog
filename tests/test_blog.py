@@ -70,10 +70,13 @@ def test_sanitizer_allows_media_embeds(app):
     assert 'youtube.com/embed/abc123' in youtube
 
     spotify = str(sanitize('<iframe src="https://open.spotify.com/embed/track/xyz"></iframe>'))
-    assert 'open.spotify.com/embed/track/xyz' in spotify
+    assert 'open.spotify.com' not in spotify
 
     instagram = str(sanitize('<iframe src="https://www.instagram.com/p/abc/embed"></iframe>'))
-    assert 'instagram.com/p/abc/embed' in instagram
+    assert 'instagram.com' not in instagram
+
+    vimeo = str(sanitize('<iframe src="https://player.vimeo.com/video/123"></iframe>'))
+    assert 'player.vimeo.com' not in vimeo
 
     blocked = str(sanitize('<iframe src="https://evil.example.com/embed"></iframe>'))
     assert 'evil.example.com' not in blocked

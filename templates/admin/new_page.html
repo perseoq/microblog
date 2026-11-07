@@ -16,7 +16,7 @@
         {% for error in form.content.errors %}<span>{{ error }}</span>{% endfor %}
     </p>
     {% include 'admin/_ckeditor_config.html' %}
-    <p class="card-hint">Para incrustar YouTube, Spotify o Instagram, abre la vista HTML (Source) del editor y pega el iframe del embed.</p>
+    <p class="card-hint">Para incrustar un video de YouTube, usa el botón de video del editor o la vista HTML (Source) y pega el iframe.</p>
     <div class="form-actions">
         <button type="submit" name="action" value="draft" class="button-ghost">Borrador</button>
         <button type="submit" name="action" value="publish">Publicar</button>

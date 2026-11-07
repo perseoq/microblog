@@ -723,6 +723,21 @@ main > h1,
   border-radius: var(--radius-sm);
 }
 
+.content iframe,
+iframe.media-embed {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  margin: 1.6em 0;
+  border: 0;
+  border-radius: 12px;
+  background: #000000;
+  box-shadow: none;
+  overflow: hidden;
+}
+
 .content figcaption {
   color: var(--muted);
   font-size: .85rem;

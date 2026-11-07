@@ -12,21 +12,6 @@
             return { src: 'https://www.youtube.com/embed/' + youtube[1], width: '560', height: '315' };
         }
 
-        var spotify = url.match(/open\.spotify\.com\/(?:embed\/)?(track|album|playlist|episode|show|artist)\/([A-Za-z0-9]+)/);
-        if (spotify) {
-            return { src: 'https://open.spotify.com/embed/' + spotify[1] + '/' + spotify[2], width: '100%', height: '352' };
-        }
-
-        var instagram = url.match(/instagram\.com\/(p|reel|tv)\/([A-Za-z0-9_-]+)/);
-        if (instagram) {
-            return { src: 'https://www.instagram.com/' + instagram[1] + '/' + instagram[2] + '/embed', width: '400', height: '480' };
-        }
-
-        var vimeo = url.match(/vimeo\.com\/(\d+)/);
-        if (vimeo) {
-            return { src: 'https://player.vimeo.com/video/' + vimeo[1], width: '560', height: '315' };
-        }
-
         return null;
     }
 
@@ -40,7 +25,7 @@
 
     CKEDITOR.dialog.add('mediaembedDialog', function (editor) {
         return {
-            title: 'Insertar YouTube, Spotify o Instagram',
+            title: 'Insertar video de YouTube',
             minWidth: 460,
             minHeight: 120,
             contents: [
@@ -51,7 +36,7 @@
                         {
                             type: 'text',
                             id: 'url',
-                            label: 'URL del video, pista o publicación',
+                            label: 'URL del video de YouTube',
                             width: '100%',
                             validate: CKEDITOR.dialog.validate.notEmpty('Introduce una URL.')
                         }
@@ -61,11 +46,11 @@
             onOk: function () {
                 var embed = buildEmbed(this.getValueOf('info', 'url'));
                 if (!embed) {
-                    alert('URL no compatible. Usa YouTube, Spotify, Instagram o Vimeo.');
+                    alert('URL de YouTube no válida.');
                     return false;
                 }
                 editor.insertHtml(
-                    '<iframe src="' + escapeAttribute(embed.src) + '" width="' + escapeAttribute(embed.width) +
+                    '<iframe class="media-embed" src="' + escapeAttribute(embed.src) + '" width="' + escapeAttribute(embed.width) +
                     '" height="' + escapeAttribute(embed.height) + '" loading="lazy" allowfullscreen></iframe>'
                 );
             }
@@ -87,7 +72,7 @@
             });
 
             editor.ui.addButton('MediaEmbed', {
-                label: 'Insertar YouTube, Spotify o Instagram',
+                label: 'Insertar video de YouTube',
                 command: 'mediaembed'
             });
         }

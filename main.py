@@ -56,8 +56,7 @@ ALLOWED_IFRAME_ATTRIBUTES = {
 }
 ALLOWED_EMBED_HOSTS = {
     'youtube.com', 'www.youtube.com', 'youtube-nocookie.com',
-    'www.youtube-nocookie.com', 'open.spotify.com', 'instagram.com',
-    'www.instagram.com', 'player.vimeo.com',
+    'www.youtube-nocookie.com',
 }
 CSS_SANITIZER = CSSSanitizer(allowed_css_properties=[
     'color', 'background-color', 'text-align', 'font-family', 'font-size',
@@ -118,8 +117,7 @@ def add_security_headers(response):
         "font-src 'self' data:; "
         "connect-src 'self'; "
         "frame-src 'self' https://youtube.com https://www.youtube.com "
-        "https://www.youtube-nocookie.com https://open.spotify.com "
-        "https://instagram.com https://www.instagram.com https://player.vimeo.com; "
+        "https://www.youtube-nocookie.com; "
         "frame-ancestors 'none'; "
         "base-uri 'self'; "
         "form-action 'self'; "
