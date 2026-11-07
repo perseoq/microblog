@@ -1,61 +1,91 @@
 {% extends 'base/base_admin.html' %}
 {% block title %}Perfil{% endblock %}
 {% block content %}
-<h1>Perfil</h1>
-<h2>Datos</h2>
-<form method="post" action="{{ url_for('admin.profile') }}" novalidate>
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.username.label }}<br>
-        {{ form.username(size=40) }}
-        {% for error in form.username.errors %}<span>{{ error }}</span>{% endfor %}
-    </p>
-    <p>
-        {{ form.email.label }}<br>
-        {{ form.email(size=40) }}
-        {% for error in form.email.errors %}<span>{{ error }}</span>{% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
-</form>
-<h2>Contraseña</h2>
-<form method="post" action="{{ url_for('admin.change_password') }}" novalidate>
-    {{ password_form.hidden_tag() }}
-    <p>
-        {{ password_form.current_password.label }}<br>
-        {{ password_form.current_password(size=40) }}
-        {% for error in password_form.current_password.errors %}<span>{{ error }}</span>{% endfor %}
-    </p>
-    <p>
-        {{ password_form.new_password.label }}<br>
-        {{ password_form.new_password(size=40) }}
-        {% for error in password_form.new_password.errors %}<span>{{ error }}</span>{% endfor %}
-    </p>
-    <p>
-        {{ password_form.confirm.label }}<br>
-        {{ password_form.confirm(size=40) }}
-        {% for error in password_form.confirm.errors %}<span>{{ error }}</span>{% endfor %}
-    </p>
-    <p>{{ password_form.submit() }}</p>
-</form>
-<h2>Verificación en dos pasos</h2>
-{% if current_user.totp_enabled %}
-    <p>Activada con una aplicación de autenticación (TOTP).</p>
-    <form method="post" action="{{ url_for('admin.disable_two_factor') }}" novalidate>
-        {{ disable_form.hidden_tag() }}
-        <p>
-            {{ disable_form.password.label }}<br>
-            {{ disable_form.password(size=40) }}
-            {% for error in disable_form.password.errors %}<span>{{ error }}</span>{% endfor %}
-        </p>
-        <p>
-            {{ disable_form.code.label }}<br>
-            {{ disable_form.code(size=10, inputmode='numeric', autocomplete='one-time-code') }}
-            {% for error in disable_form.code.errors %}<span>{{ error }}</span>{% endfor %}
-        </p>
-        <p>{{ disable_form.submit() }}</p>
-    </form>
-{% else %}
-    <p>No está activada.</p>
-    <p><a class="button" href="{{ url_for('admin.two_factor') }}">Configurar TOTP</a></p>
-{% endif %}
+<div class="page-header">
+    <div>
+        <h1>Perfil</h1>
+        <p class="page-subtitle">Gestiona tus datos, tu contraseña y la seguridad de la cuenta.</p>
+    </div>
+</div>
+
+<div class="profile-grid">
+    <section class="admin-card">
+        <div class="profile-identity">
+            <span class="avatar">{{ current_user.username[0]|upper }}</span>
+            <div>
+                <h2>{{ current_user.username }}</h2>
+                <p>{{ current_user.email }}</p>
+            </div>
+        </div>
+        <form method="post" action="{{ url_for('admin.profile') }}" novalidate>
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.username.label }}<br>
+                {{ form.username(size=40) }}
+                {% for error in form.username.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+            <p>
+                {{ form.email.label }}<br>
+                {{ form.email(size=40) }}
+                {% for error in form.email.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+            <p>{{ form.submit() }}</p>
+        </form>
+    </section>
+
+    <section class="admin-card">
+        <h2>Contraseña</h2>
+        <p class="card-hint">Cambia tu contraseña periódicamente.</p>
+        <form method="post" action="{{ url_for('admin.change_password') }}" novalidate>
+            {{ password_form.hidden_tag() }}
+            <p>
+                {{ password_form.current_password.label }}<br>
+                {{ password_form.current_password(size=40) }}
+                {% for error in password_form.current_password.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+            <p>
+                {{ password_form.new_password.label }}<br>
+                {{ password_form.new_password(size=40) }}
+                {% for error in password_form.new_password.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+            <p>
+                {{ password_form.confirm.label }}<br>
+                {{ password_form.confirm(size=40) }}
+                {% for error in password_form.confirm.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+            <p>{{ password_form.submit() }}</p>
+        </form>
+    </section>
+
+    <section class="admin-card">
+        <div class="card-head">
+            <h2>Verificación en dos pasos</h2>
+            {% if current_user.totp_enabled %}
+                <span class="status-badge is-on">Activada</span>
+            {% else %}
+                <span class="status-badge is-off">Desactivada</span>
+            {% endif %}
+        </div>
+        {% if current_user.totp_enabled %}
+            <p class="card-hint">Introduce tu contraseña y un código TOTP para desactivarla.</p>
+            <form method="post" action="{{ url_for('admin.disable_two_factor') }}" novalidate>
+                {{ disable_form.hidden_tag() }}
+                <p>
+                    {{ disable_form.password.label }}<br>
+                    {{ disable_form.password(size=40) }}
+                    {% for error in disable_form.password.errors %}<span>{{ error }}</span>{% endfor %}
+                </p>
+                <p>
+                    {{ disable_form.code.label }}<br>
+                    {{ disable_form.code(size=10, inputmode='numeric', autocomplete='one-time-code') }}
+                    {% for error in disable_form.code.errors %}<span>{{ error }}</span>{% endfor %}
+                </p>
+                <p>{{ disable_form.submit() }}</p>
+            </form>
+        {% else %}
+            <p class="card-hint">Añade un segundo factor con una aplicación de autenticación.</p>
+            <a class="button" href="{{ url_for('admin.two_factor') }}">Configurar TOTP</a>
+        {% endif %}
+    </section>
+</div>
 {% endblock %}

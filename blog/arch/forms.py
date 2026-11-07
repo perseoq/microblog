@@ -108,20 +108,20 @@ class AdminForm(FlaskForm):
 class ProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(max=20)])
     email = EmailField('Email', validators=[DataRequired(), Length(max=120)])
-    submit = SubmitField('Save')
+    submit = SubmitField('Guardar')
 
 class ChangePasswordForm(FlaskForm):
     current_password = PasswordField('Current Password', validators=[DataRequired()])
     new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=8)])
     confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('new_password')])
-    submit = SubmitField('Change Password')
+    submit = SubmitField('Cambiar contraseña')
 
 class TOTPForm(FlaskForm):
     code = StringField('Code', validators=[
         DataRequired(),
         Regexp(r'^\d{6}$', message='Introduce un código de 6 dígitos.'),
     ])
-    submit = SubmitField('Verify')
+    submit = SubmitField('Verificar')
 
 class TwoFactorDisableForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
@@ -129,4 +129,4 @@ class TwoFactorDisableForm(FlaskForm):
         DataRequired(),
         Regexp(r'^\d{6}$', message='Introduce un código de 6 dígitos.'),
     ])
-    submit = SubmitField('Disable')
+    submit = SubmitField('Desactivar')
