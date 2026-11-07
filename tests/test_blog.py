@@ -82,6 +82,7 @@ def test_detail_pages_include_sidebar_lists(client, content):
     post_page = client.get(f"/post/{content['post']}")
     assert 'Categorías'.encode('utf-8') in post_page.data
     assert b'Acerca' in post_page.data
+    assert b'aria-current="page"' in post_page.data
 
     page_detail = client.get(f"/page/{content['page']}")
     assert 'Categorías'.encode('utf-8') in page_detail.data

@@ -5,8 +5,10 @@
         <ul>
             {% for item in nav.categories %}
                 <li>
-                    <a href="{{ url_for('blog.category', category_id=item.id) }}" {% if category is defined and category.id == item.id %}aria-current="page"{% endif %}>{{ item.name }}</a>
-                    <span class="sidebar-count">{{ item.posts|length }}</span>
+                    <a class="sidebar-item" href="{{ url_for('blog.category', category_id=item.id) }}" {% if (category is defined and category.id == item.id) or (post is defined and post.category_id == item.id) %}aria-current="page"{% endif %}>
+                        {{ item.name }}
+                        <span class="sidebar-count">{{ item.posts|length }}</span>
+                    </a>
                 </li>
             {% endfor %}
         </ul>
@@ -18,8 +20,10 @@
         <ul>
             {% for item in nav.tags %}
                 <li>
-                    <a href="{{ url_for('blog.tag', tag_id=item.id) }}" {% if tag is defined and tag.id == item.id %}aria-current="page"{% endif %}>{{ item.name }}</a>
-                    <span class="sidebar-count">{{ item.posts|length }}</span>
+                    <a class="sidebar-item" href="{{ url_for('blog.tag', tag_id=item.id) }}" {% if tag is defined and tag.id == item.id %}aria-current="page"{% endif %}>
+                        {{ item.name }}
+                        <span class="sidebar-count">{{ item.posts|length }}</span>
+                    </a>
                 </li>
             {% endfor %}
         </ul>
@@ -30,7 +34,11 @@
         <h2>Páginas</h2>
         <ul>
             {% for item in nav.pages %}
-                <li><a href="{{ url_for('pages.detail', page_id=item.id) }}" {% if page is defined and page.id == item.id %}aria-current="page"{% endif %}>{{ item.title }}</a></li>
+                <li>
+                    <a class="sidebar-item" href="{{ url_for('pages.detail', page_id=item.id) }}" {% if page is defined and page.id == item.id %}aria-current="page"{% endif %}>
+                        {{ item.title }}
+                    </a>
+                </li>
             {% endfor %}
         </ul>
     </section>

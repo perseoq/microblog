@@ -828,10 +828,28 @@ aside a:hover {
   text-decoration: underline;
 }
 
-aside a[aria-current="page"] {
-  color: var(--accent);
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.sidebar-item:hover {
+  background: var(--surface-alt);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.sidebar-item[aria-current="page"] {
+  background: var(--accent-soft);
+  color: var(--ink);
   font-weight: 600;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 aside li {
