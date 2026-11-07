@@ -8,6 +8,7 @@ from blog.arch.models import User
 from blog.core.commands import seed_admin
 from blog.core.database import ensure_database
 from blog.core.extensions import bc, ckeditor, csrf, db, login, mail, migrate
+from blog.core.navigation import sidebar_nav
 from blog.core.settings import DevelopmentConfig, ProductionConfig
 from blog.core.site import get_site_config
 from blog.views.admin import admin
@@ -60,6 +61,7 @@ def sanitize_html(value):
 
 
 app.jinja_env.filters['safe_html'] = sanitize_html
+app.jinja_env.globals['sidebar_nav'] = sidebar_nav
 
 
 @app.context_processor

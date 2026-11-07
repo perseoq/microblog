@@ -1,35 +1,36 @@
-{% if categories %}
+{% set nav = sidebar_nav() %}
+{% if nav.categories %}
     <section>
         <h2>Categorías</h2>
         <ul>
-            {% for category in categories %}
+            {% for item in nav.categories %}
                 <li>
-                    <a href="{{ url_for('blog.category', category_id=category.id) }}">{{ category.name }}</a>
-                    <span class="sidebar-count">{{ category.posts|length }}</span>
+                    <a href="{{ url_for('blog.category', category_id=item.id) }}" {% if category is defined and category.id == item.id %}aria-current="page"{% endif %}>{{ item.name }}</a>
+                    <span class="sidebar-count">{{ item.posts|length }}</span>
                 </li>
             {% endfor %}
         </ul>
     </section>
 {% endif %}
-{% if tags %}
+{% if nav.tags %}
     <section>
         <h2>Etiquetas</h2>
         <ul>
-            {% for tag in tags %}
+            {% for item in nav.tags %}
                 <li>
-                    <a href="{{ url_for('blog.tag', tag_id=tag.id) }}">{{ tag.name }}</a>
-                    <span class="sidebar-count">{{ tag.posts|length }}</span>
+                    <a href="{{ url_for('blog.tag', tag_id=item.id) }}" {% if tag is defined and tag.id == item.id %}aria-current="page"{% endif %}>{{ item.name }}</a>
+                    <span class="sidebar-count">{{ item.posts|length }}</span>
                 </li>
             {% endfor %}
         </ul>
     </section>
 {% endif %}
-{% if pages %}
+{% if nav.pages %}
     <section>
         <h2>Páginas</h2>
         <ul>
-            {% for page in pages %}
-                <li><a href="{{ url_for('pages.detail', page_id=page.id) }}">{{ page.title }}</a></li>
+            {% for item in nav.pages %}
+                <li><a href="{{ url_for('pages.detail', page_id=item.id) }}" {% if page is defined and page.id == item.id %}aria-current="page"{% endif %}>{{ item.title }}</a></li>
             {% endfor %}
         </ul>
     </section>

@@ -1,6 +1,6 @@
 from flask import Blueprint, Response, jsonify, render_template, request
 
-from blog.arch.models import Category, Page, Post, PostTags, Tag
+from blog.arch.models import Category, Post, PostTags, Tag
 from blog.core.extensions import db
 from blog.core.themes import theme_css as build_theme_css
 
@@ -16,23 +16,18 @@ def theme_css():
     )
 
 
-def _sidebar_data():
-    return {
-        'categories': Category.query.order_by(Category.name).all(),
-        'tags': Tag.query.order_by(Tag.name).all(),
-        'pages': Page.query.filter_by(status='published').order_by(Page.title).all(),
-    }
-
-
 @blog.route('/')
 def index():
     posts = Post.query.filter_by(status='published').order_by(Post.date_posted.desc()).all()
-    return render_template('blog/home.html', posts=posts, **_sidebar_data())
+    return render_template('blog/home.html', posts=posts)
 
 
 @blog.route('/categories')
 def categories():
-    return render_template('blog/categories.html', **_sidebar_data())
+    return render_template(
+        'blog/categories.html',
+        categories=Category.query.order_by(Category.name).all(),
+    )
 
 
 @blog.route('/search')
@@ -46,7 +41,7 @@ def search():
         ).order_by(Post.date_posted.desc()).all()
     else:
         posts = []
-    return render_template('blog/search_by.html', posts=posts, query=query, **_sidebar_data())
+    return render_template('blog/search_by.html', posts=posts, query=query)
 
 
 @blog.route('/search/suggest')
@@ -68,9 +63,7 @@ def search_suggest():
 def category(category_id):
     category = db.get_or_404(Category, category_id)
     posts = Post.query.filter_by(category_id=category.id, status='published').order_by(Post.date_posted.desc()).all()
-    return render_template(
-        'blog/index.html', posts=posts, heading=f'Categoría: {category.name}', **_sidebar_data()
-    )
+    return render_template('blog/index.html', posts=posts, heading=f'Categoría: {category.name}', category=category)
 
 
 @blog.route('/tag/<int:tag_id>')
@@ -82,6 +75,4 @@ def tag(tag_id):
         .order_by(Post.date_posted.desc())
         .all()
     )
-    return render_template(
-        'blog/index.html', posts=posts, heading=f'Etiqueta: {tag.name}', **_sidebar_data()
-    )
+    return render_template('blog/index.html', posts=posts, heading=f'Etiqueta: {tag.name}', tag=tag)

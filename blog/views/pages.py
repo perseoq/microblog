@@ -1,7 +1,7 @@
 from flask import Blueprint, abort, render_template
 from flask_login import current_user
 
-from blog.arch.models import Category, Page, Tag
+from blog.arch.models import Page
 from blog.core.extensions import db
 
 pages = Blueprint('pages', __name__)
@@ -12,8 +12,6 @@ def index():
     return render_template(
         'blog/pages_index.html',
         pages=Page.query.filter_by(status='published').order_by(Page.title).all(),
-        categories=Category.query.order_by(Category.name).all(),
-        tags=Tag.query.order_by(Tag.name).all(),
     )
 
 

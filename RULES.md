@@ -44,6 +44,7 @@ microblog/
 │   │   ├── database.py      # crea la base de datos si no existe
 │   │   ├── enviroment.py    # carga de variables de entorno (dotenv)
 │   │   ├── extensions.py    # instancias de extensiones Flask
+│   │   ├── navigation.py    # datos del sidebar público
 │   │   ├── ratelimit.py     # límite de intentos en login y recuperación
 │   │   ├── settings.py      # clases de configuración
 │   │   ├── site.py          # configuración editable del sitio

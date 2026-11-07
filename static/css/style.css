@@ -827,6 +827,12 @@ aside a:hover {
   text-decoration: underline;
 }
 
+aside a[aria-current="page"] {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
 aside li {
   display: flex;
   align-items: center;
