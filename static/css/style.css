@@ -76,6 +76,21 @@ body {
   line-height: 1.6;
 }
 
+body.site {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+body.site main {
+  flex: 1 0 auto;
+}
+
+body.site footer {
+  flex-shrink: 0;
+}
+
 img {
   max-width: 100%;
   height: auto;
