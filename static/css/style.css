@@ -909,10 +909,63 @@ textarea {
 }
 
 .cke_source {
-  color: var(--ink) !important;
-  background: var(--surface) !important;
-  caret-color: var(--ink);
+  color: #212121 !important;
+  background: #ffffff !important;
+  caret-color: #212121;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.cke_chrome,
+.cke_top,
+.cke_bottom,
+.cke_toolbar,
+.cke_toolgroup {
+  color: #212121 !important;
+}
+
+.cke_dialog,
+.cke_dialog_body,
+.cke_dialog_contents,
+.cke_dialog_footer,
+.cke_dialog_tabs {
+  background: #ffffff !important;
+  color: #212121 !important;
+}
+
+.cke_dialog .cke_dialog_title {
+  background: #f4f4f4 !important;
+  color: #212121 !important;
+}
+
+.cke_dialog .cke_dialog_tab,
+.cke_dialog .cke_dialog_ui_labeled_label,
+.cke_dialog label {
+  color: #212121 !important;
+}
+
+.cke_dialog input,
+.cke_dialog textarea,
+.cke_dialog select,
+.cke_dialog .cke_dialog_ui_input_text,
+.cke_dialog .cke_dialog_ui_input_password,
+.cke_dialog .cke_dialog_ui_input_select {
+  background: #ffffff !important;
+  color: #212121 !important;
+  border-color: #c7c7c7 !important;
+}
+
+.cke_panel,
+.cke_panel_block,
+.cke_panel_listItem a {
+  background: #ffffff !important;
+  color: #212121 !important;
+}
+
+.cke_combo__font .cke_combo_text,
+.cke_combo__fontsize .cke_combo_text,
+.cke_combo__format .cke_combo_text,
+.cke_combo__styles .cke_combo_text {
+  color: #212121 !important;
 }
 
 input:focus-visible,
