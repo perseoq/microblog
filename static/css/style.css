@@ -263,6 +263,7 @@ header button {
 .site-sidebar {
   position: sticky;
   top: 24px;
+  align-self: start;
   display: grid;
   gap: 16px;
   align-content: start;
@@ -646,16 +647,10 @@ main > h1,
   margin: 0 0 12px;
 }
 
-.page-heading {
-  max-width: var(--measure);
-  margin: 0 0 32px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--line);
-}
-
-.page-heading h1 {
+.post > h1,
+.page > h1 {
   font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.8rem);
-  margin: 0 0 8px;
+  margin: 0 0 10px;
 }
 
 .content {
