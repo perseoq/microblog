@@ -17,12 +17,16 @@ depends_on = None
 
 
 def upgrade():
-    op.create_table(
-        'install_state',
-        sa.Column('id', sa.Integer(), nullable=False),
-        sa.PrimaryKeyConstraint('id'),
-    )
+    bind = op.get_bind()
+    if not sa.inspect(bind).has_table('install_state'):
+        op.create_table(
+            'install_state',
+            sa.Column('id', sa.Integer(), nullable=False),
+            sa.PrimaryKeyConstraint('id'),
+        )
 
 
 def downgrade():
-    op.drop_table('install_state')
+    bind = op.get_bind()
+    if sa.inspect(bind).has_table('install_state'):
+        op.drop_table('install_state')

@@ -184,6 +184,29 @@ Conclusión: sin errores ni 500 bajo carga concurrente. El cuello de botella es 
 
 ---
 
+## Migraciones multi-motor (MySQL/MariaDB/PostgreSQL)
+
+Se revisó toda la cadena de migraciones. El fallo en MariaDB (`1060 Duplicate column name 'status'`) venía de aplicar una migración sobre un esquema que ya tenía `status` (creado fuera de Alembic).
+
+Correcciones:
+
+- `9e178187db95`:
+  - Añade `status` a `page`/`post` solo si no existe.
+  - Altera `totp_secret` a `VARCHAR(255)` solo si su longitud es menor.
+  - Cifra secretos TOTP solo si están en texto plano; los ya cifrados se dejan intactos.
+  - Usa `identifier_preparer.quote_identifier('user')`: backticks en MySQL/MariaDB y comillas dobles en PostgreSQL/SQLite.
+- `0cc0f3a789b4`, `34aef1adb0dd`, `710da5fe58f0`, `b7f1c9d2a4e6`: idempotentes (comprueban columnas/tablas antes de crearlas).
+- `0cc0f3a789b4`: `server_default=sa.false()` en lugar de `sa.text('0')` para portabilidad del booleano.
+- La migración inicial `3572661ab018` sigue asumiendo un esquema vacío, como es estándar; si la base fue creada con `db.create_all`, hay que sellar la revisión correspondiente o usar las migraciones idempotentes posteriores.
+
+Validación realizada:
+
+- Cadena completa desde cero en SQLite: **OK**.
+- Esquema “adelantado” con `status` ya presente y TOTP en texto plano + ya cifrado: **upgrade OK**, sin columnas duplicadas y cifrando solo lo necesario.
+- Suite completa: **55/55 tests OK**.
+
+---
+
 ## 6. Hallazgos y correcciones
 
 | Severidad | Hallazgo | Estado |
