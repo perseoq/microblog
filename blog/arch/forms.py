@@ -78,7 +78,7 @@ class UploadForm(FlaskForm):
 
 class UploadImageForm(FlaskForm):
     image = MultipleFileField('Images', validators=[FileRequired(), FileAllowed({'png', 'jpg', 'jpeg', 'gif', 'webp'}, 'Formato de imagen no permitido.')])
-    submit = SubmitField('Upload')
+    submit = SubmitField('Subir imágenes')
 
 class ImageForm(FlaskForm):
     image = StringField('Image', validators=[DataRequired()])

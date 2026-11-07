@@ -1,33 +1,64 @@
 {% extends 'base/base_admin.html' %}
 {% block title %}{{ gallery.title }}{% endblock %}
 {% block content %}
-<h1>{{ gallery.title }}</h1>
-<p>{{ gallery.description or '' }}</p>
-<h2>Subir imágenes</h2>
-<p>Puedes seleccionar varias imágenes a la vez.</p>
-<form method="post" enctype="multipart/form-data" action="{{ url_for('gallery.upload', gallery_id=gallery.id) }}" novalidate>
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.image(multiple=True) }}
-        {% for error in form.image.errors %}<span>{{ error }}</span>{% endfor %}
-    </p>
-    <p>{{ form.submit() }}</p>
-</form>
-<h2>Imágenes</h2>
-{% if gallery.images %}
-    <ul class="images">
-        {% for image in gallery.images %}
-            <li>
-                <img src="{{ url_for('static', filename=image.url) }}" alt="{{ image.filename }}">
-                <form method="post" action="{{ url_for('gallery.delete_image', image_id=image.id) }}">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit">Eliminar</button>
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>Esta galería no tiene imágenes.</p>
-{% endif %}
-<p><a href="{{ url_for('gallery.manage') }}">Volver a galerías</a></p>
+<div class="gallery-header">
+    <div>
+        <p class="meta">Galería</p>
+        <h1>{{ gallery.title }}</h1>
+        {% if gallery.description %}<p class="gallery-description">{{ gallery.description }}</p>{% endif %}
+    </div>
+    <a class="button" href="{{ url_for('gallery.manage') }}">Volver a galerías</a>
+</div>
+
+<section class="upload-card">
+    <h2>Subir imágenes</h2>
+    <form method="post" enctype="multipart/form-data" action="{{ url_for('gallery.upload', gallery_id=gallery.id) }}" novalidate>
+        {{ form.hidden_tag() }}
+        <label class="file-drop" data-file-drop>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M12 16V4M7 9l5-5 5 5"></path>
+                <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"></path>
+            </svg>
+            <span class="file-drop-title">Arrastra imágenes aquí o haz clic para seleccionar</span>
+            <span class="file-drop-hint">PNG, JPG, JPEG, GIF o WEBP · puedes elegir varias</span>
+            {{ form.image(multiple=True, class_='file-input') }}
+        </label>
+        <ul class="upload-preview" data-upload-preview></ul>
+        <p class="upload-count" data-upload-count></p>
+        {% for error in form.image.errors %}<p class="form-error">{{ error }}</p>{% endfor %}
+        <p>{{ form.submit() }}</p>
+    </form>
+</section>
+
+<section class="gallery-images">
+    <div class="section-head">
+        <h2>Imágenes</h2>
+        <span class="count-badge">{{ gallery.images|length }}</span>
+    </div>
+    {% if gallery.images %}
+        <ul class="images gallery-grid">
+            {% for image in gallery.images %}
+                <li class="gallery-item">
+                    <img src="{{ url_for('static', filename=image.url) }}" alt="{{ image.filename }}">
+                    <form method="post" action="{{ url_for('gallery.delete_image', image_id=image.id) }}" class="gallery-item-delete">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" aria-label="Eliminar imagen">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M3 6h18"></path>
+                                <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                            </svg>
+                        </button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="empty-state">
+            <p>Esta galería no tiene imágenes todavía.</p>
+            <p>Sube la primera con el formulario de arriba.</p>
+        </div>
+    {% endif %}
+</section>
 {% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/gallery-upload.js') }}" defer></script>{% endblock %}

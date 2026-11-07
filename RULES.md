@@ -60,6 +60,7 @@ microblog/
 │   ├── js/
 │   │   ├── script.js
 │   │   ├── theme.js
+│   │   ├── gallery-upload.js
 │   │   ├── effects.js
 │   │   ├── events.js
 │   │   └── highlight.js

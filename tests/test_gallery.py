@@ -65,6 +65,17 @@ def test_gallery_browser_requires_login(client):
     assert client.get('/admin/gallery/browser').status_code == 302
 
 
+def test_gallery_manage_page_has_upload_preview(auth_client, app):
+    auth_client.post('/admin/galleries/new', data={'title': 'UI', 'description': ''}, follow_redirects=False)
+    album = Gallery.query.filter_by(title='UI').first()
+
+    response = auth_client.get(f'/admin/galleries/{album.id}')
+    assert response.status_code == 200
+    assert b'data-upload-preview' in response.data
+    assert b'js/gallery-upload.js' in response.data
+    assert b'multiple' in response.data
+
+
 def test_gallery_browser_lists_images(auth_client, app):
     user = User.query.first()
     album = Gallery(title='Browser', description='', user_id=user.id)
