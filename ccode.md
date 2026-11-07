@@ -487,3 +487,11 @@ http://127.0.0.1:10222/admin/posts/new
 en el sidebar aparece paginas, pero deben parecer listadas las paginas en el sidebar igual que las categorias junto con su numero de posts relacionados, no abrir una nueva pagina con las listas de paginas y categorias
 ```
 
+## 61
+
+```text
+en  no parece la lista de categrias ni de paginas, en la lista de paginas debe paracer  marcada en la que estas visitando actualmente
+http://127.0.0.1:10222/page/1
+```
+
+
