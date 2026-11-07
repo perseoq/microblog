@@ -646,10 +646,16 @@ main > h1,
   margin: 0 0 12px;
 }
 
-.post > h1,
-.page > h1 {
+.page-heading {
+  max-width: var(--measure);
+  margin: 0 0 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+
+.page-heading h1 {
   font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.8rem);
-  margin: 0 0 10px;
+  margin: 0 0 8px;
 }
 
 .content {

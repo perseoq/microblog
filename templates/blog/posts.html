@@ -1,9 +1,13 @@
 {% extends 'base/base_blog.html' %}
 {% block title %}{{ post.title }}{% endblock %}
-{% block content %}
-<article class="post">
+{% block hero %}
+<header class="page-heading">
     <h1>{{ post.title }}</h1>
     <p class="meta">{{ post.date_posted.strftime('%d/%m/%Y') }} · {{ post.category.name }}</p>
+</header>
+{% endblock %}
+{% block content %}
+<article class="post">
     <div class="content">{{ post.content|safe_html }}</div>
 </article>
 <section class="comments">
