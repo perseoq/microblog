@@ -1,3 +1,5 @@
+import os
+
 import segno
 from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_required
@@ -8,6 +10,7 @@ from blog.arch.forms import (
     PageForm,
     PostForm,
     ProfileForm,
+    SettingsForm,
     TOTPForm,
     TagForm,
     TwoFactorDisableForm,
@@ -23,6 +26,7 @@ from blog.arch.models import (
     Tag,
     User,
 )
+from blog.core.enviroment import read_env, write_env
 from blog.core.extensions import db
 from blog.core.totp import generate_secret, provisioning_uri, verify_code
 
@@ -298,15 +302,55 @@ def disable_two_factor():
     return redirect(url_for('admin.profile'))
 
 
-@admin.route('/settings')
+@admin.route('/settings', methods=['GET', 'POST'])
 @login_required
 def settings():
-    database_uri = current_app.config.get('SQLALCHEMY_DATABASE_URI', '')
+    env_path = current_app.config.get('ENV_FILE') or os.path.join(current_app.root_path, '.env')
+    current = read_env(env_path)
+    form = SettingsForm()
+
+    if form.validate_on_submit():
+        values = {
+            'DEBUG': 'True' if form.debug.data else 'False',
+            'DATABASE_URI': form.database_uri.data.strip(),
+            'MAIL_SERVER': (form.mail_server.data or '').strip(),
+            'MAIL_PORT': str(form.mail_port.data),
+            'MAIL_USERNAME': (form.mail_username.data or '').strip(),
+            'MAIL_USE_TLS': 'True' if form.mail_use_tls.data else 'False',
+            'MAIL_USE_SSL': 'True' if form.mail_use_ssl.data else 'False',
+            'MAIL_DEFAULT_SENDER': (form.mail_default_sender.data or '').strip(),
+        }
+
+        secret_key = (form.secret_key.data or '').strip()
+        if secret_key:
+            values['SECRET_KEY'] = secret_key
+
+        mail_password = form.mail_password.data or ''
+        if mail_password:
+            values['MAIL_PASSWORD'] = mail_password
+
+        write_env(env_path, values)
+        flash('Configuración guardada. Reinicia la aplicación para aplicar los cambios.', 'success')
+        return redirect(url_for('admin.settings'))
+
+    if not form.is_submitted():
+        form.debug.data = (current.get('DEBUG') or 'True') == 'True'
+        form.database_uri.data = current.get('DATABASE_URI') or ''
+        form.mail_server.data = current.get('MAIL_SERVER') or ''
+        try:
+            form.mail_port.data = int(current.get('MAIL_PORT') or 587)
+        except (TypeError, ValueError):
+            form.mail_port.data = 587
+        form.mail_username.data = current.get('MAIL_USERNAME') or ''
+        form.mail_use_tls.data = (current.get('MAIL_USE_TLS') or 'True') == 'True'
+        form.mail_use_ssl.data = (current.get('MAIL_USE_SSL') or 'False') == 'True'
+        form.mail_default_sender.data = current.get('MAIL_DEFAULT_SENDER') or ''
+
+    database_uri = current.get('DATABASE_URI') or ''
     database_driver = database_uri.split('://', 1)[0] if database_uri else 'sin configurar'
     return render_template(
         'admin/settings.html',
-        debug=current_app.config.get('DEBUG'),
-        mail_server=current_app.config.get('MAIL_SERVER'),
+        form=form,
         database_driver=database_driver,
     )
 

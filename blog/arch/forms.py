@@ -4,6 +4,7 @@ from flask_wtf.file import FileAllowed, FileRequired, MultipleFileField
 from wtforms import (
     BooleanField,
     EmailField,
+    IntegerField,
     PasswordField,
     SelectField,
     SelectMultipleField,
@@ -11,7 +12,7 @@ from wtforms import (
     SubmitField,
     TextAreaField,
 )
-from wtforms.validators import DataRequired, EqualTo, Length, Optional, Regexp
+from wtforms.validators import DataRequired, EqualTo, Length, NumberRange, Optional, Regexp
 
 class LoginForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(max=120)])
@@ -130,3 +131,16 @@ class TwoFactorDisableForm(FlaskForm):
         Regexp(r'^\d{6}$', message='Introduce un código de 6 dígitos.'),
     ])
     submit = SubmitField('Desactivar')
+
+class SettingsForm(FlaskForm):
+    debug = BooleanField('Modo depuración')
+    secret_key = PasswordField('Nueva SECRET_KEY', validators=[Optional(), Length(min=16)])
+    database_uri = StringField('DATABASE_URI', validators=[DataRequired(), Length(max=255)])
+    mail_server = StringField('MAIL_SERVER', validators=[Optional(), Length(max=120)])
+    mail_port = IntegerField('MAIL_PORT', validators=[DataRequired(), NumberRange(min=1, max=65535)])
+    mail_username = StringField('MAIL_USERNAME', validators=[Optional(), Length(max=120)])
+    mail_password = PasswordField('MAIL_PASSWORD', validators=[Optional()])
+    mail_use_tls = BooleanField('MAIL_USE_TLS')
+    mail_use_ssl = BooleanField('MAIL_USE_SSL')
+    mail_default_sender = StringField('MAIL_DEFAULT_SENDER', validators=[Optional(), Length(max=120)])
+    submit = SubmitField('Guardar configuración')

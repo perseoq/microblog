@@ -113,3 +113,39 @@ def test_profile_and_password(auth_client, user):
     }, follow_redirects=True)
     assert b'actualizada' in response.data
     assert db.session.get(User, user).check_password('newpass123')
+
+
+def test_settings_update_env(auth_client, app, tmp_path):
+    env_file = tmp_path / '.env'
+    env_file.write_text(
+        'DEBUG=True\n'
+        'SECRET_KEY=oldsecretoldsecret\n'
+        'DATABASE_URI=sqlite:///old.db\n'
+        'MAIL_PORT=587\n'
+        'MAIL_PASSWORD=oldpass\n'
+    )
+    app.config['ENV_FILE'] = str(env_file)
+
+    response = auth_client.get('/admin/settings')
+    assert response.status_code == 200
+    assert 'Guardar configuración'.encode('utf-8') in response.data
+
+    response = auth_client.post('/admin/settings', data={
+        'debug': 'y',
+        'database_uri': 'sqlite:///new.db',
+        'mail_server': 'smtp.example.com',
+        'mail_port': '2525',
+        'mail_username': 'user@example.com',
+        'mail_password': '',
+        'mail_use_tls': 'y',
+        'mail_default_sender': 'user@example.com',
+    }, follow_redirects=False)
+    assert response.status_code == 302
+
+    content = env_file.read_text()
+    assert "DEBUG='True'" in content
+    assert "DATABASE_URI='sqlite:///new.db'" in content
+    assert "MAIL_PORT='2525'" in content
+    assert "MAIL_USE_SSL='False'" in content
+    assert 'SECRET_KEY=oldsecretoldsecret' in content
+    assert 'MAIL_PASSWORD=oldpass' in content

@@ -1,14 +1,82 @@
 {% extends 'base/base_admin.html' %}
 {% block title %}Ajustes{% endblock %}
 {% block content %}
-<h1>Ajustes</h1>
-<dl>
-    <dt>DEBUG</dt>
-    <dd>{{ 'Activado' if debug else 'Desactivado' }}</dd>
-    <dt>Servidor de correo</dt>
-    <dd>{{ mail_server or 'Sin configurar' }}</dd>
-    <dt>Base de datos</dt>
-    <dd>{{ database_driver }}</dd>
-</dl>
-<p>Los valores sensibles se configuran mediante variables de entorno (.env).</p>
+<div class="page-header">
+    <div>
+        <h1>Ajustes</h1>
+        <p class="page-subtitle">Edita la configuración del blog. Los cambios se guardan en el archivo <code>.env</code>.</p>
+    </div>
+    <span class="status-badge is-off">Requiere reinicio</span>
+</div>
+
+<form method="post" class="settings-form" novalidate>
+    {{ form.hidden_tag() }}
+
+    <section class="admin-card">
+        <h2>General</h2>
+        <p class="card-hint">Entorno de ejecución y clave de sesión.</p>
+        <div class="form-grid">
+            <label class="check-row">{{ form.debug() }} <span>{{ form.debug.label.text }}</span></label>
+            <p>
+                {{ form.secret_key.label }}<br>
+                {{ form.secret_key(placeholder='Dejar vacío para mantener la actual') }}
+                {% for error in form.secret_key.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+        </div>
+    </section>
+
+    <section class="admin-card">
+        <h2>Base de datos</h2>
+        <p class="card-hint">Cadena de conexión de SQLAlchemy. Motor actual: <span class="env-key">{{ database_driver }}</span></p>
+        <p>
+            {{ form.database_uri.label }}<br>
+            {{ form.database_uri() }}
+            {% for error in form.database_uri.errors %}<span>{{ error }}</span>{% endfor %}
+        </p>
+    </section>
+
+    <section class="admin-card">
+        <h2>Correo saliente</h2>
+        <p class="card-hint">Se usa para la recuperación de contraseñas.</p>
+        <div class="form-grid">
+            <p>
+                {{ form.mail_server.label }}<br>
+                {{ form.mail_server() }}
+                {% for error in form.mail_server.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+            <p>
+                {{ form.mail_port.label }}<br>
+                {{ form.mail_port() }}
+                {% for error in form.mail_port.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+        </div>
+        <div class="form-grid">
+            <p>
+                {{ form.mail_username.label }}<br>
+                {{ form.mail_username() }}
+                {% for error in form.mail_username.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+            <p>
+                {{ form.mail_password.label }}<br>
+                {{ form.mail_password(placeholder='Dejar vacío para mantener la actual') }}
+                {% for error in form.mail_password.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+        </div>
+        <div class="form-grid">
+            <p>
+                {{ form.mail_default_sender.label }}<br>
+                {{ form.mail_default_sender() }}
+                {% for error in form.mail_default_sender.errors %}<span>{{ error }}</span>{% endfor %}
+            </p>
+            <div class="check-group">
+                <label class="check-row">{{ form.mail_use_tls() }} <span>{{ form.mail_use_tls.label.text }}</span></label>
+                <label class="check-row">{{ form.mail_use_ssl() }} <span>{{ form.mail_use_ssl.label.text }}</span></label>
+            </div>
+        </div>
+    </section>
+
+    <div class="form-actions">
+        {{ form.submit() }}
+    </div>
+</form>
 {% endblock %}
