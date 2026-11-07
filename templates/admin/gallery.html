@@ -35,7 +35,7 @@
                         <a class="button" href="{{ url_for('gallery.manage_gallery', gallery_id=album.id) }}">Gestionar</a>
                         <form method="post" action="{{ url_for('gallery.delete', gallery_id=album.id) }}" class="album-delete-form">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <button type="submit" class="button-danger">Eliminar galería</button>
+                            <button type="submit" class="button button-danger">Eliminar galería</button>
                         </form>
                     </div>
                 </div>
