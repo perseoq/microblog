@@ -1,5 +1,6 @@
 {% extends 'base/base_admin.html' %}
 {% block title %}{{ heading }}{% endblock %}
+{% block head %}{{ ckeditor.load() }}{% endblock %}
 {% block content %}
 <h1>{{ heading }}</h1>
 <form method="post" novalidate>
@@ -12,6 +13,7 @@
     <p>
         {{ form.content.label }}<br>
         {{ form.content(rows=12, cols=70) }}
+        {{ ckeditor.config(name='content') }}
         {% for error in form.content.errors %}<span>{{ error }}</span>{% endfor %}
     </p>
     <p>{{ form.submit() }}</p>
