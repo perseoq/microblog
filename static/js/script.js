@@ -23,10 +23,12 @@
 
     function render() {
         var dark = isDark();
+        var label = dark ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
 
         for (var j = 0; j < toggles.length; j++) {
-            toggles[j].textContent = dark ? 'Modo claro' : 'Modo oscuro';
             toggles[j].setAttribute('aria-pressed', dark ? 'true' : 'false');
+            toggles[j].setAttribute('aria-label', label);
+            toggles[j].setAttribute('title', label);
         }
     }
 

@@ -70,6 +70,7 @@ microblog/
     ├── base/                # layouts base
     │   ├── base_blog.html
     │   ├── base_admin.html
+    │   ├── theme_toggle.html
     │   └── base_login.html
     ├── auth/                # autenticación e instalación
     │   ├── login.html

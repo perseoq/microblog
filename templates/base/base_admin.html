@@ -21,7 +21,7 @@
             <a href="{{ url_for('admin.settings') }}">Ajustes</a>
             <a href="{{ url_for('blog.index') }}">Ver sitio</a>
             <a href="{{ url_for('auth.logout') }}">Salir</a>
-            <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">Modo oscuro</button>
+            {% include 'base/theme_toggle.html' %}
         </nav>
     </header>
     <main id="contenido">

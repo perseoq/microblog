@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="auth">
-    <button type="button" class="theme-toggle auth-toggle" data-theme-toggle aria-pressed="false">Modo oscuro</button>
+    {% set toggle_class = 'auth-toggle' %}
+    {% include 'base/theme_toggle.html' %}
     <main id="contenido">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
