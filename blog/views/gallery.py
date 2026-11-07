@@ -35,7 +35,12 @@ def manage():
 @login_required
 def browser():
     galleries = Gallery.query.order_by(Gallery.title).all()
-    return render_template('admin/gallery_browser.html', galleries=galleries)
+    image_count = sum(len(album.images) for album in galleries)
+    return render_template(
+        'admin/gallery_browser.html',
+        galleries=galleries,
+        image_count=image_count,
+    )
 
 
 @gallery.route('/admin/galleries/new', methods=['GET', 'POST'])

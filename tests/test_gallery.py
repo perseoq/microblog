@@ -99,3 +99,5 @@ def test_gallery_browser_lists_images(auth_client, app):
     response = auth_client.get('/admin/gallery/browser')
     assert response.status_code == 200
     assert b'/static/uploads/imgs/foto.png' in response.data
+    assert b'data-browser-filter' in response.data
+    assert b'js/gallery-browser.js' in response.data

@@ -4,48 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Elegir imagen · microblog</title>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="gallery-browser-page">
+    <header class="browser-header">
+        <div>
+            <h1>Elegir imagen</h1>
+            <p>Selecciona una imagen de la galería para insertarla en el contenido.</p>
+        </div>
+        {% if image_count %}
+            <input type="search" placeholder="Buscar por galería" data-browser-filter aria-label="Buscar imágenes por galería">
+        {% endif %}
+    </header>
     <main class="gallery-browser">
-        <h1>Elegir imagen</h1>
-        {% if galleries %}
-            {% for album in galleries %}
-                {% if album.images %}
-                    <section>
-                        <h2>{{ album.title }}</h2>
-                        <ul class="images">
-                            {% for image in album.images %}
-                                <li>
-                                    <button type="button" class="browser-image" data-url="{{ url_for('static', filename=image.url) }}">
-                                        <img src="{{ url_for('static', filename=image.url) }}" alt="{{ image.filename }}">
-                                    </button>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </section>
-                {% endif %}
-            {% endfor %}
+        {% if image_count %}
+            <div data-browser-list>
+                {% for album in galleries %}
+                    {% if album.images %}
+                        <section class="browser-album">
+                            <div class="browser-album-head">
+                                <h2>{{ album.title }}</h2>
+                                <span class="count-badge">{{ album.images|length }}</span>
+                            </div>
+                            <ul class="browser-grid">
+                                {% for image in album.images %}
+                                    <li class="browser-item" data-album="{{ album.title|lower }}">
+                                        <button type="button" class="browser-image" data-url="{{ url_for('static', filename=image.url) }}" title="Insertar imagen de {{ album.title }}">
+                                            <img src="{{ url_for('static', filename=image.url) }}" alt="{{ album.title }}" loading="lazy">
+                                            <span class="browser-image-overlay">Seleccionar</span>
+                                        </button>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </section>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="empty-state" data-browser-empty hidden>
+                <p>No hay imágenes que coincidan con la búsqueda.</p>
+            </div>
         {% else %}
-            <p>No hay imágenes en la galería.</p>
+            <div class="empty-state">
+                <p>No hay imágenes en la galería.</p>
+                <p>Sube imágenes desde Panel → Galería.</p>
+            </div>
         {% endif %}
     </main>
-    <script>
-    (function () {
-        var params = new URLSearchParams(window.location.search);
-        var funcNum = params.get('CKEditorFuncNum');
-
-        document.querySelectorAll('.browser-image').forEach(function (button) {
-            button.addEventListener('click', function () {
-                if (!funcNum || !window.opener || window.opener.closed) {
-                    return;
-                }
-
-                window.opener.CKEDITOR.tools.callFunction(funcNum, button.getAttribute('data-url'));
-                window.close();
-            });
-        });
-    })();
-    </script>
+    <script src="{{ url_for('static', filename='js/gallery-browser.js') }}" defer></script>
 </body>
 </html>
