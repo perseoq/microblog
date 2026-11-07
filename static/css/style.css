@@ -1250,14 +1250,16 @@ td button:hover {
 
 .album-actions {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  margin-top: 8px;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-top: 10px;
 }
 
 .album-actions .button {
   padding: 7px 14px;
-  font-size: .85rem;
+  font-size: .82rem;
 }
 
 .album-delete-form {
@@ -1266,15 +1268,28 @@ td button:hover {
   max-width: none;
 }
 
-.button-danger {
+.button-link-danger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
   background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
   color: var(--danger);
-  border-color: var(--danger);
+  font-size: .8rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.button-danger:hover {
-  background: var(--danger);
-  color: #ffffff;
+.button-link-danger svg {
+  width: 15px;
+  height: 15px;
+}
+
+.button-link-danger:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
 }
 
 @media (max-width: 560px) {
