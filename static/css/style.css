@@ -66,6 +66,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  background-color: var(--paper);
 }
 
 body {
@@ -913,6 +914,19 @@ textarea {
   background: #ffffff !important;
   caret-color: #212121;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html body.cke_dialog_open {
+  background-color: var(--paper) !important;
+}
+
+.cke_dialog_container {
+  background: transparent !important;
+}
+
+.cke_dialog_background_cover {
+  background-color: #000000 !important;
+  opacity: .5 !important;
 }
 
 .cke_chrome,
