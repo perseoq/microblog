@@ -3,9 +3,10 @@ import time
 from flask import Blueprint, current_app, flash, make_response, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from itsdangerous import BadSignature, SignatureExpired, URLSafeTimedSerializer
+from sqlalchemy.exc import IntegrityError
 
 from blog.arch.forms import InstallForm, LoginForm, RecoverForm, ResetPasswordForm, TOTPForm
-from blog.arch.models import User
+from blog.arch.models import InstallState, User
 from blog.core.extensions import db, mail
 from blog.core.ratelimit import clear_rate_limit, is_rate_limited
 from blog.core.totp import verify_code
@@ -21,6 +22,10 @@ PENDING_2FA_REMEMBER = 'pending_2fa_remember'
 
 def _reset_serializer():
     return URLSafeTimedSerializer(current_app.config['SECRET_KEY'], salt='password-reset')
+
+
+def _reset_token(user):
+    return _reset_serializer().dumps({'email': user.email, 'pwd': user.password_hash})
 
 
 def _clear_pending_2fa():
@@ -108,7 +113,7 @@ def recover():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            token = _reset_serializer().dumps(user.email)
+            token = _reset_token(user)
             link = url_for('auth.reset_password', token=token, _external=True)
             body = f'Para restablecer tu contraseña visita: {link}'
             try:
@@ -128,12 +133,15 @@ def recover():
 @auth.route('/recover/<token>', methods=['GET', 'POST'])
 def reset_password(token):
     try:
-        email = _reset_serializer().loads(token, max_age=RESET_TOKEN_MAX_AGE)
+        data = _reset_serializer().loads(token, max_age=RESET_TOKEN_MAX_AGE)
     except (BadSignature, SignatureExpired):
         flash('El enlace de recuperación no es válido o ha expirado.', 'danger')
         return redirect(url_for('auth.recover'))
-    user = User.query.filter_by(email=email).first()
-    if user is None:
+    if not isinstance(data, dict):
+        flash('El enlace de recuperación no es válido o ha expirado.', 'danger')
+        return redirect(url_for('auth.recover'))
+    user = User.query.filter_by(email=data.get('email')).first()
+    if user is None or data.get('pwd') != user.password_hash:
         flash('El enlace de recuperación no es válido.', 'danger')
         return redirect(url_for('auth.recover'))
     form = ResetPasswordForm()
@@ -154,7 +162,12 @@ def install():
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
-        db.session.commit()
+        db.session.add(InstallState(id=1))
+        try:
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            return redirect(url_for('auth.login'))
         flash('Administrador creado. Inicia sesión.', 'success')
         return redirect(url_for('auth.login'))
     return render_template('auth/install.html', form=form)

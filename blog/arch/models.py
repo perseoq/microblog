@@ -117,6 +117,10 @@ class ImagesPage(db.Model):
     image_id = db.Column(db.Integer, db.ForeignKey('image.id'), primary_key=True)
     page_id = db.Column(db.Integer, db.ForeignKey('page.id'), primary_key=True)
 
+class InstallState(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+
 class SiteConfig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     site_title = db.Column(db.String(100), nullable=False, default='microblog')

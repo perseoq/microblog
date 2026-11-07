@@ -56,6 +56,11 @@ def test_search_suggestions(client, content):
     assert client.get('/search/suggest?q=H').get_json() == []
 
 
+def test_untrusted_host_rejected(client):
+    response = client.get('/', headers={'Host': 'evil.example'})
+    assert response.status_code == 400
+
+
 def test_theme_css(client):
     response = client.get('/theme.css')
     assert response.status_code == 200

@@ -46,7 +46,11 @@ def test_authenticated_blog_shows_admin_links(auth_client):
 
 
 def test_password_reset(client, app, user):
-    token = URLSafeTimedSerializer(app.config['SECRET_KEY'], salt='password-reset').dumps('ana@example.com')
+    user_obj = User.query.filter_by(email='ana@example.com').first()
+    token = URLSafeTimedSerializer(app.config['SECRET_KEY'], salt='password-reset').dumps({
+        'email': 'ana@example.com',
+        'pwd': user_obj.password_hash,
+    })
     response = client.get(f'/recover/{token}')
     assert response.status_code == 200
     response = client.post(f'/recover/{token}', data={
@@ -56,6 +60,27 @@ def test_password_reset(client, app, user):
     assert response.status_code == 302
     user = User.query.filter_by(email='ana@example.com').first()
     assert user.check_password('newsecret1')
+
+
+def test_reset_token_is_single_use(client, app, user):
+    user_obj = User.query.filter_by(email='ana@example.com').first()
+    token = URLSafeTimedSerializer(app.config['SECRET_KEY'], salt='password-reset').dumps({
+        'email': 'ana@example.com',
+        'pwd': user_obj.password_hash,
+    })
+    client.post(f'/recover/{token}', data={
+        'password': 'newsecret1',
+        'confirm': 'newsecret1',
+    }, follow_redirects=False)
+
+    response = client.post(f'/recover/{token}', data={
+        'password': 'another1',
+        'confirm': 'another1',
+    }, follow_redirects=False)
+    assert response.status_code == 302
+    user = User.query.filter_by(email='ana@example.com').first()
+    assert user.check_password('newsecret1')
+    assert not user.check_password('another1')
 
 
 def test_invalid_reset_token(client, user):
