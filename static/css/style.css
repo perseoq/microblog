@@ -23,6 +23,8 @@
   --focus: #14509b;
   --radius: 12px;
   --radius-sm: 7px;
+  --sidebar-width: 248px;
+  --sidebar-collapsed: 68px;
   --shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 10px 28px rgba(0, 0, 0, .06);
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-heading: Georgia, "Iowan Old Style", "Times New Roman", serif;
@@ -810,6 +812,214 @@ body.admin main > h1 {
 
 body.admin form {
   margin-bottom: 24px;
+}
+
+.admin-shell {
+  min-height: 100vh;
+}
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  width: var(--sidebar-width);
+  padding: 16px 12px;
+  background: var(--surface);
+  border-right: 1px solid var(--line);
+  transition: width .18s ease, transform .18s ease;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px 16px;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar-logo svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+}
+
+.sidebar-nav,
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar-nav {
+  overflow-y: auto;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px;
+  border-radius: 8px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: .9rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sidebar-link svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
+.sidebar-link:hover {
+  background: var(--surface-alt);
+  color: var(--ink);
+}
+
+.sidebar-link[aria-current="page"] {
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.admin-main {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin-left: var(--sidebar-width);
+  transition: margin-left .18s ease;
+}
+
+.admin-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px clamp(16px, 3vw, 32px);
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+
+.admin-topbar-title {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.admin-topbar .theme-toggle {
+  margin-left: auto;
+}
+
+.sidebar-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background: transparent;
+  color: var(--ink-soft);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  line-height: 0;
+}
+
+.sidebar-toggle:hover {
+  background: var(--surface-alt);
+  color: var(--ink);
+}
+
+.sidebar-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  background: rgba(0, 0, 0, .45);
+}
+
+.admin-shell .admin-main main {
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px clamp(16px, 3vw, 32px) 56px;
+}
+
+@media (min-width: 901px) {
+  html.sidebar-collapsed .sidebar {
+    width: var(--sidebar-collapsed);
+  }
+
+  html.sidebar-collapsed .admin-main {
+    margin-left: var(--sidebar-collapsed);
+  }
+
+  html.sidebar-collapsed .sidebar .nav-label {
+    display: none;
+  }
+
+  html.sidebar-collapsed .sidebar-brand,
+  html.sidebar-collapsed .sidebar-logo,
+  html.sidebar-collapsed .sidebar-link {
+    justify-content: center;
+  }
+
+  html.sidebar-collapsed .sidebar-link {
+    gap: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: var(--sidebar-width);
+    transform: translateX(-100%);
+    box-shadow: 0 0 40px rgba(0, 0, 0, .25);
+    transition: transform .18s ease;
+  }
+
+  html.sidebar-open .sidebar {
+    transform: translateX(0);
+  }
+
+  .admin-main,
+  html.sidebar-collapsed .admin-main {
+    margin-left: 0;
+  }
+
+  html.sidebar-open .sidebar-overlay {
+    display: block;
+  }
+
+  .admin-shell .admin-main main {
+    padding-top: 20px;
+  }
 }
 
 .cke,
