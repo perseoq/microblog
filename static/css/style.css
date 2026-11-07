@@ -939,6 +939,11 @@ html body.cke_dialog_open {
   background: transparent !important;
 }
 
+.cke_dialog tbody tr:hover,
+.cke_dialog_container tbody tr:hover {
+  background: transparent !important;
+}
+
 .cke_dialog_background_cover {
   background-color: #000000 !important;
   opacity: .5 !important;
