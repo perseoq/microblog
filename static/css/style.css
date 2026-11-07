@@ -296,6 +296,124 @@ main > h1,
   margin: 0 0 10px;
 }
 
+.home-hero {
+  max-width: var(--measure);
+  margin: 0 0 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: var(--accent);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.home-hero h1 {
+  margin: 0 0 12px;
+  font-size: clamp(2.4rem, 2rem + 2vw, 3.6rem);
+  letter-spacing: -.02em;
+}
+
+.home-lead {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 1.1rem;
+}
+
+.featured-post {
+  padding: 24px;
+  margin-bottom: 32px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.featured-post h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.6rem, 1.3rem + 1.2vw, 2.2rem);
+}
+
+.featured-post h2 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.featured-post h2 a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.featured-post p {
+  max-width: var(--measure);
+  color: var(--ink-soft);
+}
+
+.featured-post .meta {
+  color: var(--muted);
+}
+
+.featured-post .button {
+  margin-top: 8px;
+}
+
+.home-main .section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.home-main .section-head h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-list-item {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.post-list-item:last-child {
+  border-bottom: none;
+}
+
+.post-list-item h3 {
+  margin: 0 0 4px;
+  font-size: 1.2rem;
+}
+
+.post-list-item h3 a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.post-list-item h3 a:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.post-list-item p {
+  max-width: var(--measure);
+  margin: 0 0 6px;
+}
+
+.post-list-item p:last-child {
+  margin-bottom: 0;
+  color: var(--ink-soft);
+}
+
 .meta {
   color: var(--muted);
   font-size: .8rem;
@@ -483,6 +601,22 @@ aside a {
 aside a:hover {
   color: var(--accent);
   text-decoration: underline;
+}
+
+aside li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-count {
+  margin-left: auto;
+  padding: 1px 8px;
+  background: var(--surface-alt);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 600;
 }
 
 form {

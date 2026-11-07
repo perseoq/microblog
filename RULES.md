@@ -86,6 +86,7 @@ microblog/
     │   ├── footer.html
     │   ├── sidebar.html
     │   ├── _post_list.html
+    │   ├── home.html
     │   ├── index.html
     │   ├── posts.html
     │   ├── pages.html

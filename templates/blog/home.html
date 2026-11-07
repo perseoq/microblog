@@ -1,0 +1,44 @@
+{% extends 'base/base_blog.html' %}
+{% block title %}microblog{% endblock %}
+{% block content %}
+<section class="home-hero">
+    <p class="eyebrow">Blog</p>
+    <h1>microblog</h1>
+    <p class="home-lead">Ideas, notas y tutoriales sobre desarrollo, diseño y tecnología.</p>
+</section>
+
+<div class="layout">
+    <div class="home-main">
+        {% if posts %}
+            {% set featured = posts[0] %}
+            <article class="featured-post">
+                <p class="meta">{{ featured.date_posted.strftime('%d/%m/%Y') }} · {{ featured.category.name }}</p>
+                <h2><a href="{{ url_for('posts.detail', post_id=featured.id) }}">{{ featured.title }}</a></h2>
+                <p>{{ featured.content|striptags|truncate(260, True, '…') }}</p>
+                <a class="button" href="{{ url_for('posts.detail', post_id=featured.id) }}">Leer post</a>
+            </article>
+
+            {% if posts|length > 1 %}
+                <div class="section-head">
+                    <h2>Más publicaciones</h2>
+                </div>
+                <ul class="post-list">
+                    {% for post in posts[1:] %}
+                        <li class="post-list-item">
+                            <h3><a href="{{ url_for('posts.detail', post_id=post.id) }}">{{ post.title }}</a></h3>
+                            <p class="meta">{{ post.date_posted.strftime('%d/%m/%Y') }} · {{ post.category.name }}</p>
+                            <p>{{ post.content|striptags|truncate(180, True, '…') }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% else %}
+            <div class="empty-state">
+                <p>No hay publicaciones todavía.</p>
+                <p>Vuelve pronto para leer novedades.</p>
+            </div>
+        {% endif %}
+    </div>
+    {% include 'blog/sidebar.html' %}
+</div>
+{% endblock %}

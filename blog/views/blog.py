@@ -17,7 +17,7 @@ def _sidebar_data():
 @blog.route('/')
 def index():
     posts = Post.query.order_by(Post.date_posted.desc()).all()
-    return render_template('blog/index.html', posts=posts, **_sidebar_data())
+    return render_template('blog/home.html', posts=posts, **_sidebar_data())
 
 
 @blog.route('/search')
