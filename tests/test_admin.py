@@ -115,6 +115,26 @@ def test_profile_and_password(auth_client, user):
     assert db.session.get(User, user).check_password('newpass123')
 
 
+def test_site_config_requires_login(client):
+    assert client.get('/admin/configuracion').status_code == 302
+
+
+def test_site_config_update(auth_client):
+    assert auth_client.get('/admin/configuracion').status_code == 200
+
+    response = auth_client.post('/admin/configuracion', data={
+        'site_title': 'Mi Blog',
+        'site_description': 'Otra descripción',
+        'footer_text': '© Mi Blog',
+    }, follow_redirects=False)
+    assert response.status_code == 302
+
+    home = auth_client.get('/')
+    assert b'Mi Blog' in home.data
+    assert 'Otra descripción'.encode('utf-8') in home.data
+    assert '© Mi Blog'.encode('utf-8') in home.data
+
+
 def test_settings_update_env(auth_client, app, tmp_path):
     env_file = tmp_path / '.env'
     env_file.write_text(

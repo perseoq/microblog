@@ -144,3 +144,9 @@ class SettingsForm(FlaskForm):
     mail_use_ssl = BooleanField('MAIL_USE_SSL')
     mail_default_sender = StringField('MAIL_DEFAULT_SENDER', validators=[Optional(), Length(max=120)])
     submit = SubmitField('Guardar configuración')
+
+class SiteConfigForm(FlaskForm):
+    site_title = StringField('Título del sitio', validators=[DataRequired(), Length(max=100)])
+    site_description = TextAreaField('Descripción', validators=[Optional(), Length(max=300)])
+    footer_text = StringField('Texto del footer', validators=[DataRequired(), Length(max=200)])
+    submit = SubmitField('Guardar configuración')

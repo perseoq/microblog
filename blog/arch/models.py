@@ -111,3 +111,12 @@ class ImagesPage(db.Model):
     __tablename__ = 'images_page'
     image_id = db.Column(db.Integer, db.ForeignKey('image.id'), primary_key=True)
     page_id = db.Column(db.Integer, db.ForeignKey('page.id'), primary_key=True)
+
+class SiteConfig(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    site_title = db.Column(db.String(100), nullable=False, default='microblog')
+    site_description = db.Column(db.Text, nullable=False, default='')
+    footer_text = db.Column(db.String(200), nullable=False, default='© microblog')
+
+    def __repr__(self):
+        return f"SiteConfig('{self.site_title}')"

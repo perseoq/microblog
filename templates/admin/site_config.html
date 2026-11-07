@@ -1,0 +1,43 @@
+{% extends 'base/base_admin.html' %}
+{% block title %}Configuración{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Configuración</h1>
+        <p class="page-subtitle">Personaliza el título, la descripción y el footer del blog.</p>
+    </div>
+</div>
+
+<form method="post" class="settings-form" novalidate>
+    {{ form.hidden_tag() }}
+
+    <section class="admin-card">
+        <h2>Portada</h2>
+        <p class="card-hint">Se muestra en el encabezado de la página principal.</p>
+        <p>
+            {{ form.site_title.label }}<br>
+            {{ form.site_title(size=60) }}
+            {% for error in form.site_title.errors %}<span>{{ error }}</span>{% endfor %}
+        </p>
+        <p>
+            {{ form.site_description.label }}<br>
+            {{ form.site_description(rows=3, cols=60) }}
+            {% for error in form.site_description.errors %}<span>{{ error }}</span>{% endfor %}
+        </p>
+    </section>
+
+    <section class="admin-card">
+        <h2>Footer</h2>
+        <p class="card-hint">Texto que aparece al pie de las páginas públicas.</p>
+        <p>
+            {{ form.footer_text.label }}<br>
+            {{ form.footer_text(size=60) }}
+            {% for error in form.footer_text.errors %}<span>{{ error }}</span>{% endfor %}
+        </p>
+    </section>
+
+    <div class="form-actions">
+        {{ form.submit() }}
+    </div>
+</form>
+{% endblock %}

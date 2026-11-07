@@ -11,6 +11,7 @@ from blog.arch.forms import (
     PostForm,
     ProfileForm,
     SettingsForm,
+    SiteConfigForm,
     TOTPForm,
     TagForm,
     TwoFactorDisableForm,
@@ -28,6 +29,7 @@ from blog.arch.models import (
 )
 from blog.core.enviroment import read_env, write_env
 from blog.core.extensions import db
+from blog.core.site import get_site_config
 from blog.core.totp import generate_secret, provisioning_uri, verify_code
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
@@ -300,6 +302,21 @@ def disable_two_factor():
     else:
         flash('Introduce tu contraseña y un código de 6 dígitos.', 'danger')
     return redirect(url_for('admin.profile'))
+
+
+@admin.route('/configuracion', methods=['GET', 'POST'])
+@login_required
+def site_config():
+    config = get_site_config()
+    form = SiteConfigForm(obj=config)
+    if form.validate_on_submit():
+        config.site_title = form.site_title.data.strip()
+        config.site_description = (form.site_description.data or '').strip()
+        config.footer_text = form.footer_text.data.strip()
+        db.session.commit()
+        flash('Configuración del sitio actualizada.', 'success')
+        return redirect(url_for('admin.site_config'))
+    return render_template('admin/site_config.html', form=form)
 
 
 @admin.route('/settings', methods=['GET', 'POST'])
