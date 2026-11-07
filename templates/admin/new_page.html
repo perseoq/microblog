@@ -18,9 +18,10 @@
     <p>
         {{ form.content.label }}<br>
         {{ form.content(rows=12, cols=70) }}
-        {{ ckeditor.config(name='content') }}
+        {{ ckeditor.config(name='content', custom_config='extraAllowedContent: "iframe[*]"') }}
         {% for error in form.content.errors %}<span>{{ error }}</span>{% endfor %}
     </p>
+    <p class="card-hint">Para incrustar YouTube, Spotify o Instagram, abre la vista HTML (Source) del editor y pega el iframe del embed.</p>
     <p>{{ form.submit() }}</p>
 </form>
 <p><a href="{{ url_for('admin.pages') }}">Volver a páginas</a></p>

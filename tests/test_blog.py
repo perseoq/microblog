@@ -62,6 +62,26 @@ def test_theme_css(client):
     assert b'data-theme-style="dracula"' in response.data
 
 
+def test_sanitizer_allows_media_embeds(app):
+    sanitize = app.jinja_env.filters['safe_html']
+
+    youtube = str(sanitize('<iframe src="https://www.youtube.com/embed/abc123" allowfullscreen></iframe>'))
+    assert '<iframe' in youtube
+    assert 'youtube.com/embed/abc123' in youtube
+
+    spotify = str(sanitize('<iframe src="https://open.spotify.com/embed/track/xyz"></iframe>'))
+    assert 'open.spotify.com/embed/track/xyz' in spotify
+
+    instagram = str(sanitize('<iframe src="https://www.instagram.com/p/abc/embed"></iframe>'))
+    assert 'instagram.com/p/abc/embed' in instagram
+
+    blocked = str(sanitize('<iframe src="https://evil.example.com/embed"></iframe>'))
+    assert 'evil.example.com' not in blocked
+
+    script = str(sanitize('<script>alert(1)</script>'))
+    assert '<script>' not in script
+
+
 def test_category_and_tag_filters(client, content):
     assert client.get(f"/category/{content['category']}").status_code == 200
     assert client.get(f"/tag/{content['tag']}").status_code == 200

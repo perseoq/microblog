@@ -1,4 +1,5 @@
 import os
+from urllib.parse import urlparse
 
 import bleach
 from flask import Flask, request
@@ -40,20 +41,46 @@ ALLOWED_HTML_TAGS = [
     'p', 'br', 'hr', 'strong', 'b', 'em', 'i', 'u', 's', 'blockquote',
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'pre', 'code',
     'a', 'img', 'figure', 'figcaption', 'table', 'thead', 'tbody', 'tr',
-    'th', 'td', 'span', 'div',
+    'th', 'td', 'span', 'div', 'iframe',
 ]
 ALLOWED_HTML_ATTRIBUTES = {
     '*': ['class'],
     'a': ['href', 'title', 'target', 'rel'],
     'img': ['src', 'alt', 'title', 'width', 'height'],
 }
+ALLOWED_IFRAME_ATTRIBUTES = {
+    'src', 'width', 'height', 'allow', 'allowfullscreen', 'frameborder',
+    'loading', 'title', 'referrerpolicy',
+}
+ALLOWED_EMBED_HOSTS = {
+    'youtube.com', 'www.youtube.com', 'youtube-nocookie.com',
+    'www.youtube-nocookie.com', 'open.spotify.com', 'instagram.com',
+    'www.instagram.com', 'player.vimeo.com',
+}
+
+
+def _is_allowed_embed(value):
+    try:
+        parsed = urlparse(value)
+    except ValueError:
+        return False
+    return parsed.scheme in ('http', 'https') and parsed.netloc.lower() in ALLOWED_EMBED_HOSTS
+
+
+def _allowed_attribute(tag, name, value):
+    if tag == 'iframe':
+        if name not in ALLOWED_IFRAME_ATTRIBUTES:
+            return False
+        return _is_allowed_embed(value) if name == 'src' else True
+    allowed = ALLOWED_HTML_ATTRIBUTES.get('*', []) + ALLOWED_HTML_ATTRIBUTES.get(tag, [])
+    return name in allowed
 
 
 def sanitize_html(value):
     cleaned = bleach.clean(
         value or '',
         tags=ALLOWED_HTML_TAGS,
-        attributes=ALLOWED_HTML_ATTRIBUTES,
+        attributes=_allowed_attribute,
         protocols=['http', 'https', 'mailto'],
         strip=True,
     )
@@ -83,7 +110,9 @@ def add_security_headers(response):
         "script-src 'self' 'unsafe-inline' 'unsafe-eval'; "
         "font-src 'self' data:; "
         "connect-src 'self'; "
-        "frame-src 'self'; "
+        "frame-src 'self' https://youtube.com https://www.youtube.com "
+        "https://www.youtube-nocookie.com https://open.spotify.com "
+        "https://instagram.com https://www.instagram.com https://player.vimeo.com; "
         "frame-ancestors 'none'; "
         "base-uri 'self'; "
         "form-action 'self'; "
