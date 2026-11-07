@@ -4,6 +4,7 @@ from markupsafe import Markup
 
 from blog.arch.models import User
 from blog.core.commands import seed_admin
+from blog.core.database import ensure_database
 from blog.core.extensions import bc, ckeditor, csrf, db, login, mail, migrate
 from blog.core.settings import ProductionConfig
 from blog.views.admin import admin
@@ -18,6 +19,7 @@ app.config.from_object(ProductionConfig)
 
 bc.init_app(app)
 db.init_app(app)
+ensure_database(app)
 migrate.init_app(app, db)
 login.init_app(app)
 mail.init_app(app)

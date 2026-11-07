@@ -41,6 +41,7 @@ microblog/
 │   │   └── middleware.py    # middleware / hooks de petición
 │   ├── core/                # infraestructura y configuración
 │   │   ├── commands.py      # comandos CLI (seed-admin)
+│   │   ├── database.py      # crea la base de datos si no existe
 │   │   ├── enviroment.py    # carga de variables de entorno (dotenv)
 │   │   ├── extensions.py    # instancias de extensiones Flask
 │   │   ├── settings.py      # clases de configuración
