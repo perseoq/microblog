@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, jsonify, render_template, request
 
 from blog.arch.models import Category, Page, Post, PostTags, Tag
 from blog.core.extensions import db
@@ -36,6 +36,21 @@ def search():
     else:
         posts = []
     return render_template('blog/search_by.html', posts=posts, query=query, **_sidebar_data())
+
+
+@blog.route('/search/suggest')
+def search_suggest():
+    query = request.args.get('q', '').strip()
+    if len(query) < 2:
+        return jsonify([])
+    pattern = f'%{query}%'
+    posts = (
+        Post.query.filter(Post.title.ilike(pattern))
+        .order_by(Post.date_posted.desc())
+        .limit(8)
+        .all()
+    )
+    return jsonify([post.title for post in posts])
 
 
 @blog.route('/category/<int:category_id>')

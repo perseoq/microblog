@@ -50,6 +50,13 @@ def test_search(client, content):
     assert b'Sin resultados' in client.get('/search?q=nada').data
 
 
+def test_search_suggestions(client, content):
+    response = client.get('/search/suggest?q=Hola')
+    assert response.status_code == 200
+    assert 'Hola Flask' in response.get_json()
+    assert client.get('/search/suggest?q=H').get_json() == []
+
+
 def test_category_and_tag_filters(client, content):
     assert client.get(f"/category/{content['category']}").status_code == 200
     assert client.get(f"/tag/{content['tag']}").status_code == 200

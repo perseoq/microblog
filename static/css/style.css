@@ -307,10 +307,8 @@ header button {
 }
 
 .site-sidebar header form {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin: 10px 0;
+  display: block;
+  margin: 0 0 14px;
 }
 
 .site-sidebar header input[type="search"] {
@@ -318,8 +316,43 @@ header button {
   margin: 0;
 }
 
-.site-sidebar header form button {
-  width: 100%;
+.search-field {
+  position: relative;
+}
+
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 70;
+  max-height: 240px;
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+}
+
+.search-suggestions[hidden] {
+  display: none;
+}
+
+.search-suggestion {
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: var(--ink-soft);
+  font-size: .85rem;
+  cursor: pointer;
+}
+
+.search-suggestion:hover,
+.search-suggestion[aria-selected="true"] {
+  background: var(--surface-alt);
+  color: var(--ink);
 }
 
 .site-sidebar header .theme-toggle {

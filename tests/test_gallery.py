@@ -8,6 +8,11 @@ def test_gallery_requires_login(client):
     assert client.get('/admin/galleries').status_code == 302
 
 
+def test_gallery_hidden_from_visitors(client):
+    assert client.get('/gallery').status_code == 302
+    assert client.get('/gallery/1').status_code == 302
+
+
 def test_gallery_create_and_public(auth_client):
     response = auth_client.post('/admin/galleries/new', data={
         'title': 'Viajes',

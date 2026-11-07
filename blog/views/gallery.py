@@ -13,12 +13,14 @@ gallery = Blueprint('gallery', __name__)
 
 
 @gallery.route('/gallery')
+@login_required
 def index():
     galleries = Gallery.query.order_by(Gallery.date_created.desc()).all()
     return render_template('blog/gallery.html', galleries=galleries)
 
 
 @gallery.route('/gallery/<int:gallery_id>')
+@login_required
 def detail(gallery_id):
     album = db.get_or_404(Gallery, gallery_id)
     return render_template('blog/gallery_detail.html', gallery=album)
