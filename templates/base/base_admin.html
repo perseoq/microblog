@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Panel{% endblock %} · microblog</title>
+    <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body class="admin">
@@ -20,6 +21,7 @@
             <a href="{{ url_for('admin.settings') }}">Ajustes</a>
             <a href="{{ url_for('blog.index') }}">Ver sitio</a>
             <a href="{{ url_for('auth.logout') }}">Salir</a>
+            <button type="button" class="theme-toggle" data-theme-toggle aria-pressed="false">Modo oscuro</button>
         </nav>
     </header>
     <main id="contenido">

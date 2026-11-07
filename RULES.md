@@ -58,6 +58,7 @@ microblog/
 │   ├── img/
 │   ├── js/
 │   │   ├── script.js
+│   │   ├── theme.js
 │   │   ├── effects.js
 │   │   ├── events.js
 │   │   └── highlight.js
