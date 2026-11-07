@@ -460,3 +460,30 @@ haz pruebas de testeo, owasp, concurrencia y estres
 ```text
 todo lo que se escribió en estos prompts pásalos a ccode.md
 ```
+
+## 59
+
+```text
+aplica las correcciones: Añadir cabeceras de seguridad (after_request).
+Configurar SESSION_COOKIE_SAMESITE='Lax' y SESSION_COOKIE_SECURE=True en producción.
+Rate limiting en login/recuperación/2FA.
+Tope de subida (por ejemplo 200 MB) y FileSize por archivo.
+Cifrar totp_secret en reposo.
+DEBUG=False en producción y actualizar pip.
+
+luego haz push y agrega este prompt a ccode.md y de nuevo haz push
+
+no puedo salvar como drafi los posts ni las páginas
+
+los colores del blog no deben afectar a los colores de propiedades de las imagenes ni la ventana de eleccion de imagenes de los posts
+```
+
+## 60
+
+```text
+no puedo agregar tags en
+http://127.0.0.1:10222/admin/posts/new
+
+en el sidebar aparece paginas, pero deben parecer listadas las paginas en el sidebar igual que las categorias junto con su numero de posts relacionados, no abrir una nueva pagina con las listas de paginas y categorias
+```
+
