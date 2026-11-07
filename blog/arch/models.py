@@ -6,6 +6,8 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(60), nullable=False)
+    totp_secret = db.Column(db.String(32), nullable=True)
+    totp_enabled = db.Column(db.Boolean, nullable=False, default=False, server_default=db.false())
 
     def set_password(self, password):
         self.password_hash = bc.generate_password_hash(password).decode('utf-8')

@@ -43,7 +43,8 @@ microblog/
 │   │   ├── commands.py      # comandos CLI (seed-admin)
 │   │   ├── enviroment.py    # carga de variables de entorno (dotenv)
 │   │   ├── extensions.py    # instancias de extensiones Flask
-│   │   └── settings.py      # clases de configuración
+│   │   ├── settings.py      # clases de configuración
+│   │   └── totp.py          # utilidades TOTP (2FA)
 │   └── views/               # blueprints (una vista por archivo)
 │       ├── auth.py          # blueprint 'auth' (login/logout/recover/install)
 │       ├── admin.py         # blueprint 'admin' (panel de administración)
@@ -71,6 +72,7 @@ microblog/
     │   └── base_login.html
     ├── auth/                # autenticación e instalación
     │   ├── login.html
+    │   ├── verify_2fa.html
     │   ├── recovery.html
     │   ├── reset.html
     │   └── install.html
@@ -98,6 +100,7 @@ microblog/
         ├── new_gallery.html
         ├── gallery_manage.html
         ├── profile.html
+        ├── two_factor.html
         ├── settings.html
         └── search_by.html
 ```
@@ -146,7 +149,7 @@ microblog/
 
 Los modelos actuales son la base del dominio y no deben reestructurarse sin necesidad:
 
-- **User** — usuario autenticable (Flask-Login).
+- **User** — usuario autenticable (Flask-Login), con TOTP opcional para el segundo factor.
 - **Category**, **Post**, **PostTags** — contenido del blog y su categorización.
 - **Comment** — comentarios sobre publicaciones.
 - **Page** — páginas estáticas.

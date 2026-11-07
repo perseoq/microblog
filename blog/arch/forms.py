@@ -12,7 +12,7 @@ from wtforms import (
     SubmitField,
     TextAreaField,
 )
-from wtforms.validators import DataRequired, EqualTo, Length, Optional
+from wtforms.validators import DataRequired, EqualTo, Length, Optional, Regexp
 
 class LoginForm(FlaskForm):
     email = EmailField('Email', validators=[DataRequired(), Length(max=120)])
@@ -116,3 +116,18 @@ class ChangePasswordForm(FlaskForm):
     new_password = PasswordField('New Password', validators=[DataRequired(), Length(min=8)])
     confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('new_password')])
     submit = SubmitField('Change Password')
+
+class TOTPForm(FlaskForm):
+    code = StringField('Code', validators=[
+        DataRequired(),
+        Regexp(r'^\d{6}$', message='Introduce un código de 6 dígitos.'),
+    ])
+    submit = SubmitField('Verify')
+
+class TwoFactorDisableForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    code = StringField('Code', validators=[
+        DataRequired(),
+        Regexp(r'^\d{6}$', message='Introduce un código de 6 dígitos.'),
+    ])
+    submit = SubmitField('Disable')

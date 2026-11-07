@@ -1,0 +1,16 @@
+{% extends 'base/base_login.html' %}
+{% block title %}Verificación en dos pasos{% endblock %}
+{% block content %}
+<h1>Verificación en dos pasos</h1>
+<p>Introduce el código de 6 dígitos de tu aplicación de autenticación.</p>
+<form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <p>
+        {{ form.code.label }}<br>
+        {{ form.code(size=10, inputmode='numeric', autocomplete='one-time-code', autofocus=True) }}
+        {% for error in form.code.errors %}<span>{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.submit() }}</p>
+</form>
+<p><a href="{{ url_for('auth.login') }}">Volver al inicio de sesión</a></p>
+{% endblock %}

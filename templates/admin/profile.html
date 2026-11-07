@@ -37,4 +37,25 @@
     </p>
     <p>{{ password_form.submit() }}</p>
 </form>
+<h2>Verificación en dos pasos</h2>
+{% if current_user.totp_enabled %}
+    <p>Activada con una aplicación de autenticación (TOTP).</p>
+    <form method="post" action="{{ url_for('admin.disable_two_factor') }}" novalidate>
+        {{ disable_form.hidden_tag() }}
+        <p>
+            {{ disable_form.password.label }}<br>
+            {{ disable_form.password(size=40) }}
+            {% for error in disable_form.password.errors %}<span>{{ error }}</span>{% endfor %}
+        </p>
+        <p>
+            {{ disable_form.code.label }}<br>
+            {{ disable_form.code(size=10, inputmode='numeric', autocomplete='one-time-code') }}
+            {% for error in disable_form.code.errors %}<span>{{ error }}</span>{% endfor %}
+        </p>
+        <p>{{ disable_form.submit() }}</p>
+    </form>
+{% else %}
+    <p>No está activada.</p>
+    <p><a class="button" href="{{ url_for('admin.two_factor') }}">Configurar TOTP</a></p>
+{% endif %}
 {% endblock %}

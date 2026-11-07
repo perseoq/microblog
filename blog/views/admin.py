@@ -1,4 +1,5 @@
-from flask import Blueprint, current_app, flash, redirect, render_template, request, url_for
+import segno
+from flask import Blueprint, current_app, flash, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_required
 
 from blog.arch.forms import (
@@ -7,7 +8,9 @@ from blog.arch.forms import (
     PageForm,
     PostForm,
     ProfileForm,
+    TOTPForm,
     TagForm,
+    TwoFactorDisableForm,
 )
 from blog.arch.models import (
     Category,
@@ -21,6 +24,7 @@ from blog.arch.models import (
     User,
 )
 from blog.core.extensions import db
+from blog.core.totp import generate_secret, provisioning_uri, verify_code
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
 
@@ -227,7 +231,12 @@ def profile():
             db.session.commit()
             flash('Perfil actualizado.', 'success')
             return redirect(url_for('admin.profile'))
-    return render_template('admin/profile.html', form=form, password_form=ChangePasswordForm())
+    return render_template(
+        'admin/profile.html',
+        form=form,
+        password_form=ChangePasswordForm(),
+        disable_form=TwoFactorDisableForm(),
+    )
 
 
 @admin.route('/profile/password', methods=['POST'])
@@ -243,6 +252,49 @@ def change_password():
             flash('Contraseña actualizada.', 'success')
     else:
         flash('Revisa los datos de la nueva contraseña.', 'danger')
+    return redirect(url_for('admin.profile'))
+
+
+@admin.route('/profile/2fa', methods=['GET', 'POST'])
+@login_required
+def two_factor():
+    if current_user.totp_enabled:
+        return redirect(url_for('admin.profile'))
+    secret = session.get('totp_setup_secret')
+    if not secret:
+        secret = generate_secret()
+        session['totp_setup_secret'] = secret
+    form = TOTPForm()
+    if form.validate_on_submit():
+        if verify_code(secret, form.code.data):
+            current_user.totp_secret = secret
+            current_user.totp_enabled = True
+            db.session.commit()
+            session.pop('totp_setup_secret', None)
+            flash('Verificación en dos pasos activada.', 'success')
+            return redirect(url_for('admin.profile'))
+        flash('Código inválido. Revisa la hora de tu dispositivo e inténtalo de nuevo.', 'danger')
+    uri = provisioning_uri(secret, current_user.email)
+    qr_data_uri = segno.make(uri).svg_data_uri(scale=4)
+    return render_template('admin/two_factor.html', form=form, secret=secret, qr_data_uri=qr_data_uri)
+
+
+@admin.route('/profile/2fa/disable', methods=['POST'])
+@login_required
+def disable_two_factor():
+    if not current_user.totp_enabled:
+        return redirect(url_for('admin.profile'))
+    form = TwoFactorDisableForm()
+    if form.validate_on_submit():
+        if current_user.check_password(form.password.data) and verify_code(current_user.totp_secret, form.code.data):
+            current_user.totp_enabled = False
+            current_user.totp_secret = None
+            db.session.commit()
+            flash('Verificación en dos pasos desactivada.', 'success')
+        else:
+            flash('Contraseña o código incorrectos.', 'danger')
+    else:
+        flash('Introduce tu contraseña y un código de 6 dígitos.', 'danger')
     return redirect(url_for('admin.profile'))
 
 
