@@ -33,6 +33,8 @@ def test_post_form_has_media_embed_button(auth_client):
     assert b'Borrador' in response.data
     assert b'Publicar' in response.data
     assert b'name="status"' not in response.data
+    assert b'for="tags"' not in response.data
+    assert b'new_tags' in response.data
 
 
 def test_post_crud(auth_client, category):
@@ -153,6 +155,32 @@ def test_pages_publish_and_draft_toggle(auth_client):
         'action': 'publish',
     }, follow_redirects=False)
     assert db.session.get(Page, page.id).status == 'published'
+
+
+def test_edit_post_prefills_comma_tags(auth_client, category):
+    auth_client.post('/admin/posts/new', data={
+        'title': 'Con tags',
+        'content': 'Cuerpo',
+        'category': str(category),
+        'new_tags': 'flask, nuevo',
+        'action': 'publish',
+    }, follow_redirects=False)
+    post = Post.query.filter_by(title='Con tags').first()
+
+    edit = auth_client.get(f'/admin/posts/{post.id}/edit')
+    assert edit.status_code == 200
+    assert b'flask' in edit.data
+    assert b'nuevo' in edit.data
+    assert b'for="tags"' not in edit.data
+
+    auth_client.post(f'/admin/posts/{post.id}/edit', data={
+        'title': 'Con tags',
+        'content': 'Cuerpo',
+        'category': str(category),
+        'new_tags': 'flask',
+        'action': 'publish',
+    }, follow_redirects=False)
+    assert {tag.name for tag in db.session.get(Post, post.id).tags} == {'flask'}
 
 
 def test_categories_and_tags(auth_client):

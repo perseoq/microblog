@@ -38,12 +38,11 @@ admin = Blueprint('admin', __name__, url_prefix='/admin')
 
 def _post_form_choices(form):
     form.category.choices = [(c.id, c.name) for c in Category.query.order_by(Category.name).all()]
-    form.tags.choices = [(t.id, t.name) for t in Tag.query.order_by(Tag.name).all()]
 
 
-def _sync_post_tags(post, selected_ids, raw_names):
+def _sync_post_tags(post, raw_names):
     PostTags.query.filter_by(post_id=post.id).delete()
-    tag_ids = set(selected_ids or [])
+    tag_ids = set()
 
     for raw in (raw_names or '').split(','):
         name = raw.strip()
@@ -98,7 +97,7 @@ def new_post():
         )
         db.session.add(post)
         db.session.flush()
-        _sync_post_tags(post, form.tags.data, form.new_tags.data)
+        _sync_post_tags(post, form.new_tags.data)
         db.session.commit()
         flash('Post creado.', 'success')
         return redirect(url_for('admin.posts'))
@@ -117,13 +116,13 @@ def edit_post(post_id):
         post.content = form.content.data
         post.category_id = form.category.data
         post.status = status
-        _sync_post_tags(post, form.tags.data, form.new_tags.data)
+        _sync_post_tags(post, form.new_tags.data)
         db.session.commit()
         flash('Post actualizado.', 'success')
         return redirect(url_for('admin.posts'))
     if not form.is_submitted():
         form.category.data = post.category_id
-        form.tags.data = [link.tag_id for link in PostTags.query.filter_by(post_id=post.id).all()]
+        form.new_tags.data = ', '.join(tag.name for tag in post.tags)
     return render_template('admin/new_post.html', form=form, heading='Editar post')
 
 

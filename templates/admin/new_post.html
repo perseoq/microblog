@@ -16,11 +16,6 @@
         {% for error in form.category.errors %}<span>{{ error }}</span>{% endfor %}
     </p>
     <p>
-        {{ form.tags.label }}<br>
-        {{ form.tags(size=5) }}
-        {% for error in form.tags.errors %}<span>{{ error }}</span>{% endfor %}
-    </p>
-    <p>
         {{ form.new_tags.label }}<br>
         {{ form.new_tags(size=60, placeholder='separadas por comas') }}
         {% for error in form.new_tags.errors %}<span>{{ error }}</span>{% endfor %}

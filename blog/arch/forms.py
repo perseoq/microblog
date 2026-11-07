@@ -7,7 +7,6 @@ from wtforms import (
     IntegerField,
     PasswordField,
     SelectField,
-    SelectMultipleField,
     StringField,
     SubmitField,
     TextAreaField,
@@ -51,7 +50,6 @@ class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])
     content = CKEditorField('Content', validators=[DataRequired()])
     category = SelectField('Category', coerce=int, validators=[DataRequired()])
-    tags = SelectMultipleField('Tags', coerce=int, validators=[Optional()])
     new_tags = StringField('Nuevas etiquetas', validators=[Optional(), Length(max=200)])
 
 class CommentForm(FlaskForm):
