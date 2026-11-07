@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegir imagen · microblog</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="gallery-browser-page">
+    <main class="gallery-browser">
+        <h1>Elegir imagen</h1>
+        {% if galleries %}
+            {% for album in galleries %}
+                {% if album.images %}
+                    <section>
+                        <h2>{{ album.title }}</h2>
+                        <ul class="images">
+                            {% for image in album.images %}
+                                <li>
+                                    <button type="button" class="browser-image" data-url="{{ url_for('static', filename=image.url) }}">
+                                        <img src="{{ url_for('static', filename=image.url) }}" alt="{{ image.filename }}">
+                                    </button>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>No hay imágenes en la galería.</p>
+        {% endif %}
+    </main>
+    <script>
+    (function () {
+        var params = new URLSearchParams(window.location.search);
+        var funcNum = params.get('CKEditorFuncNum');
+
+        document.querySelectorAll('.browser-image').forEach(function (button) {
+            button.addEventListener('click', function () {
+                if (!funcNum || !window.opener || window.opener.closed) {
+                    return;
+                }
+
+                window.opener.CKEDITOR.tools.callFunction(funcNum, button.getAttribute('data-url'));
+                window.close();
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

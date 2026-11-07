@@ -1,0 +1,54 @@
+<script>
+(function () {
+    var browserUrl = "{{ url_for('gallery.browser') }}";
+
+    function openGallery(editor) {
+        var funcNum = CKEDITOR.tools.addFunction(function (url) {
+            editor.insertHtml('<img src="' + url + '" alt="">');
+        });
+        var separator = browserUrl.indexOf('?') === -1 ? '?' : '&';
+
+        window.open(
+            browserUrl + separator + 'CKEditorFuncNum=' + funcNum + '&CKEditor=' + editor.name,
+            'galleryBrowser',
+            'width=920,height=680,menubar=no,toolbar=no'
+        );
+    }
+
+    function setup(editor) {
+        if (editor._galleryConfigured) {
+            return;
+        }
+
+        editor._galleryConfigured = true;
+
+        var command = editor.getCommand('image');
+
+        if (command) {
+            command.exec = function () {
+                openGallery(editor);
+            };
+        }
+    }
+
+    function waitFor(editor) {
+        if (editor.status === 'ready') {
+            setup(editor);
+        } else {
+            editor.on('instanceReady', function () {
+                setup(editor);
+            });
+        }
+    }
+
+    CKEDITOR.on('instanceReady', function (event) {
+        if (event.editor.name === 'content') {
+            setup(event.editor);
+        }
+    });
+
+    if (CKEDITOR.instances.content) {
+        waitFor(CKEDITOR.instances.content);
+    }
+})();
+</script>

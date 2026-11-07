@@ -102,6 +102,8 @@ microblog/
         ├── gallery.html
         ├── new_gallery.html
         ├── gallery_manage.html
+        ├── gallery_browser.html
+        ├── _ckeditor_gallery.html
         ├── profile.html
         ├── two_factor.html
         ├── settings.html

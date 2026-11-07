@@ -719,6 +719,53 @@ td button:hover {
   max-width: none;
 }
 
+.gallery-browser-page {
+  background: var(--surface);
+}
+
+.gallery-browser {
+  max-width: none;
+  padding: 24px;
+}
+
+.gallery-browser h1 {
+  font-size: 1.4rem;
+  margin: 0 0 20px;
+}
+
+.gallery-browser h2 {
+  font-size: 1.05rem;
+  margin: 24px 0 12px;
+}
+
+.gallery-browser .images li {
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.browser-image {
+  display: block;
+  width: 100%;
+  padding: 0;
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.browser-image:hover {
+  border-color: var(--accent);
+}
+
+.browser-image img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
 .galleries article {
   padding: 20px 0;
   border-bottom: 1px solid var(--line);

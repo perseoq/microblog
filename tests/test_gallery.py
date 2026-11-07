@@ -1,6 +1,6 @@
 import io
 
-from blog.arch.models import Gallery, Image
+from blog.arch.models import Gallery, Image, User
 from blog.core.extensions import db
 
 
@@ -55,3 +55,21 @@ def test_image_upload_and_delete(auth_client, app, tmp_path):
 
     auth_client.post(f'/admin/galleries/{album.id}/delete', follow_redirects=False)
     assert db.session.get(Gallery, album.id) is None
+
+
+def test_gallery_browser_requires_login(client):
+    assert client.get('/admin/gallery/browser').status_code == 302
+
+
+def test_gallery_browser_lists_images(auth_client, app):
+    user = User.query.first()
+    album = Gallery(title='Browser', description='', user_id=user.id)
+    db.session.add(album)
+    db.session.commit()
+
+    db.session.add(Image(filename='foto.png', url='uploads/imgs/foto.png', gallery_id=album.id, user_id=user.id))
+    db.session.commit()
+
+    response = auth_client.get('/admin/gallery/browser')
+    assert response.status_code == 200
+    assert b'/static/uploads/imgs/foto.png' in response.data

@@ -31,6 +31,13 @@ def manage():
     return render_template('admin/gallery.html', galleries=galleries)
 
 
+@gallery.route('/admin/gallery/browser')
+@login_required
+def browser():
+    galleries = Gallery.query.order_by(Gallery.title).all()
+    return render_template('admin/gallery_browser.html', galleries=galleries)
+
+
 @gallery.route('/admin/galleries/new', methods=['GET', 'POST'])
 @login_required
 def new():
