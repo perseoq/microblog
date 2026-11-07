@@ -38,11 +38,11 @@ def test_login_and_logout(client, user):
     assert response.status_code == 302
 
 
-def test_authenticated_blog_hides_admin_links(auth_client):
+def test_authenticated_blog_shows_admin_links(auth_client):
     home = auth_client.get('/')
     assert home.status_code == 200
-    assert b'/admin/' not in home.data
-    assert b'/gallery' not in home.data
+    assert b'/admin/' in home.data
+    assert b'/admin/galleries' in home.data
 
 
 def test_password_reset(client, app, user):
