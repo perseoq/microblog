@@ -33,13 +33,9 @@
                     <p class="album-meta">{{ album.date_created.strftime('%d/%m/%Y') }}</p>
                     <div class="album-actions">
                         <a class="button" href="{{ url_for('gallery.manage_gallery', gallery_id=album.id) }}">Gestionar</a>
-                        <form method="post" action="{{ url_for('gallery.delete', gallery_id=album.id) }}" class="icon-form">
+                        <form method="post" action="{{ url_for('gallery.delete', gallery_id=album.id) }}" class="album-delete-form">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                            <button type="submit" class="icon-button-danger" aria-label="Eliminar galería {{ album.title }}" title="Eliminar galería">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-                                    <path d="M18 6 6 18M6 6l12 12"></path>
-                                </svg>
-                            </button>
+                            <button type="submit" class="button-danger">Eliminar galería</button>
                         </form>
                     </div>
                 </div>

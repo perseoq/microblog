@@ -1260,6 +1260,23 @@ td button:hover {
   font-size: .85rem;
 }
 
+.album-delete-form {
+  display: inline-flex;
+  margin: 0;
+  max-width: none;
+}
+
+.button-danger {
+  background: transparent;
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.button-danger:hover {
+  background: var(--danger);
+  color: #ffffff;
+}
+
 @media (max-width: 560px) {
   .inline-form {
     flex-direction: column;
