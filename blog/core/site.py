@@ -13,6 +13,7 @@ def get_site_config():
             site_title=DEFAULT_TITLE,
             site_description=DEFAULT_DESCRIPTION,
             footer_text=DEFAULT_FOOTER,
+            theme='default',
         )
         db.session.add(config)
         db.session.commit()

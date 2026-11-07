@@ -30,6 +30,7 @@ from blog.arch.models import (
 from blog.core.enviroment import read_env, write_env
 from blog.core.extensions import db
 from blog.core.site import get_site_config
+from blog.core.themes import THEMES, themes_for_display
 from blog.core.totp import generate_secret, provisioning_uri, verify_code
 
 admin = Blueprint('admin', __name__, url_prefix='/admin')
@@ -302,6 +303,26 @@ def disable_two_factor():
     else:
         flash('Introduce tu contraseña y un código de 6 dígitos.', 'danger')
     return redirect(url_for('admin.profile'))
+
+
+@admin.route('/themes', methods=['GET', 'POST'])
+@login_required
+def themes():
+    config = get_site_config()
+    if request.method == 'POST':
+        name = request.form.get('theme', '').strip()
+        if name in THEMES:
+            config.theme = name
+            db.session.commit()
+            flash('Tema aplicado.', 'success')
+            return redirect(url_for('admin.themes'))
+        flash('Tema no válido.', 'danger')
+    return render_template(
+        'admin/themes.html',
+        themes=themes_for_display(),
+        current=config.theme,
+        current_label=THEMES.get(config.theme, THEMES['default'])['label'],
+    )
 
 
 @admin.route('/configuracion', methods=['GET', 'POST'])

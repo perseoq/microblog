@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme-style="{{ site.theme or 'default' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Panel{% endblock %} · microblog</title>
+    <title>{% block title %}Panel{% endblock %} · {{ site.site_title }}</title>
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('blog.theme_css') }}">
     {% block head %}{% endblock %}
 </head>
 <body class="admin">
@@ -13,12 +14,12 @@
     <div class="admin-shell">
         <aside class="sidebar" id="admin-sidebar">
             <div class="sidebar-brand">
-                <a class="sidebar-logo" href="{{ url_for('admin.dashboard') }}" aria-label="Panel de microblog">
+                <a class="sidebar-logo" href="{{ url_for('admin.dashboard') }}" aria-label="Panel de {{ site.site_title }}">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
                         <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
                     </svg>
-                    <span class="nav-label">microblog</span>
+                    <span class="nav-label">{{ site.site_title }}</span>
                 </a>
             </div>
             <nav class="sidebar-nav" aria-label="Navegación del panel">
@@ -73,6 +74,15 @@
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                     <span class="nav-label">Perfil</span>
+                </a>
+                <a class="sidebar-link" href="{{ url_for('admin.themes') }}" title="Temas">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M12 21a9 9 0 1 1 9-9c0 2.5-2 3-3.5 3H16a2 2 0 0 0 0 4c0 1.5-1.5 2-4 2z"></path>
+                        <circle cx="7.5" cy="10.5" r="1"></circle>
+                        <circle cx="12" cy="7.5" r="1"></circle>
+                        <circle cx="16.5" cy="10.5" r="1"></circle>
+                    </svg>
+                    <span class="nav-label">Temas</span>
                 </a>
                 <a class="sidebar-link" href="{{ url_for('admin.site_config') }}" title="Configuración">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

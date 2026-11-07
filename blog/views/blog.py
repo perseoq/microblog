@@ -1,9 +1,19 @@
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, Response, jsonify, render_template, request
 
 from blog.arch.models import Category, Page, Post, PostTags, Tag
 from blog.core.extensions import db
+from blog.core.themes import theme_css as build_theme_css
 
 blog = Blueprint('blog', __name__)
+
+
+@blog.route('/theme.css')
+def theme_css():
+    return Response(
+        build_theme_css(),
+        mimetype='text/css',
+        headers={'Cache-Control': 'public, max-age=3600'},
+    )
 
 
 def _sidebar_data():

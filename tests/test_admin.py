@@ -135,6 +135,16 @@ def test_site_config_update(auth_client):
     assert '© Mi Blog'.encode('utf-8') in home.data
 
 
+def test_themes_page_and_apply(auth_client):
+    assert auth_client.get('/admin/themes').status_code == 200
+
+    response = auth_client.post('/admin/themes', data={'theme': 'dracula'}, follow_redirects=False)
+    assert response.status_code == 302
+
+    home = auth_client.get('/')
+    assert b'data-theme-style="dracula"' in home.data
+
+
 def test_settings_update_env(auth_client, app, tmp_path):
     env_file = tmp_path / '.env'
     env_file.write_text(

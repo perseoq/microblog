@@ -117,6 +117,7 @@ class SiteConfig(db.Model):
     site_title = db.Column(db.String(100), nullable=False, default='microblog')
     site_description = db.Column(db.Text, nullable=False, default='')
     footer_text = db.Column(db.String(200), nullable=False, default='© microblog')
+    theme = db.Column(db.String(50), nullable=False, default='default', server_default='default')
 
     def __repr__(self):
         return f"SiteConfig('{self.site_title}')"

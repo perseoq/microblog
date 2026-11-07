@@ -57,7 +57,11 @@ def sanitize_html(value):
 
 
 app.jinja_env.filters['safe_html'] = sanitize_html
-app.jinja_env.globals['site_settings'] = get_site_config
+
+
+@app.context_processor
+def inject_site_config():
+    return {'site': get_site_config()}
 
 
 @login.user_loader

@@ -1,12 +1,12 @@
-{%- set site = site_settings() -%}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme-style="{{ site.theme or 'default' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{{ site.site_title }}{% endblock %}</title>
     <script src="{{ url_for('static', filename='js/theme.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('blog.theme_css') }}">
 </head>
 <body class="site">
     <a class="skip-link" href="#contenido">Saltar al contenido</a>

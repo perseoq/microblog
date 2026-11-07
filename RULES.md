@@ -46,6 +46,7 @@ microblog/
 │   │   ├── extensions.py    # instancias de extensiones Flask
 │   │   ├── settings.py      # clases de configuración
 │   │   ├── site.py          # configuración editable del sitio
+│   │   ├── themes.py        # catálogo de temas y CSS dinámico
 │   │   └── totp.py          # utilidades TOTP (2FA)
 │   └── views/               # blueprints (una vista por archivo)
 │       ├── auth.py          # blueprint 'auth' (login/logout/recover/install)
@@ -113,6 +114,7 @@ microblog/
         ├── profile.html
         ├── two_factor.html
         ├── site_config.html
+        ├── themes.html
         ├── settings.html
         └── search_by.html
 ```
@@ -162,7 +164,7 @@ microblog/
 Los modelos actuales son la base del dominio y no deben reestructurarse sin necesidad:
 
 - **User** — usuario autenticable (Flask-Login), con TOTP opcional para el segundo factor.
-- **SiteConfig** — título, descripción y texto del footer editables desde el panel.
+- **SiteConfig** — título, descripción, texto del footer y tema editables desde el panel.
 - **Category**, **Post**, **PostTags** — contenido del blog y su categorización.
 - **Comment** — comentarios sobre publicaciones.
 - **Page** — páginas estáticas.

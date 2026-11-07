@@ -57,6 +57,12 @@ def test_search_suggestions(client, content):
     assert client.get('/search/suggest?q=H').get_json() == []
 
 
+def test_theme_css(client):
+    response = client.get('/theme.css')
+    assert response.status_code == 200
+    assert b'data-theme-style="dracula"' in response.data
+
+
 def test_category_and_tag_filters(client, content):
     assert client.get(f"/category/{content['category']}").status_code == 200
     assert client.get(f"/tag/{content['tag']}").status_code == 200
