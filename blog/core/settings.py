@@ -14,6 +14,7 @@ class Config:
     UPLOAD_IMAGE_FOLDER = 'uploads/imgs'
     ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
     CKEDITOR_SERVE_LOCAL = True
+    CKEDITOR_PKG_TYPE = 'full'
     CKEDITOR_HEIGHT = 320
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'

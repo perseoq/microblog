@@ -88,12 +88,13 @@ def new_post():
     form = PostForm()
     _post_form_choices(form)
     if form.validate_on_submit():
+        status = 'published' if request.form.get('action') == 'publish' else 'draft'
         post = Post(
             title=form.title.data,
             content=form.content.data,
             category_id=form.category.data,
             user_id=current_user.id,
-            status=form.status.data,
+            status=status,
         )
         db.session.add(post)
         db.session.flush()
@@ -111,10 +112,11 @@ def edit_post(post_id):
     form = PostForm(obj=post)
     _post_form_choices(form)
     if form.validate_on_submit():
+        status = 'published' if request.form.get('action') == 'publish' else 'draft'
         post.title = form.title.data
         post.content = form.content.data
         post.category_id = form.category.data
-        post.status = form.status.data
+        post.status = status
         _sync_post_tags(post, form.tags.data, form.new_tags.data)
         db.session.commit()
         flash('Post actualizado.', 'success')
@@ -150,11 +152,12 @@ def pages():
 def new_page():
     form = PageForm()
     if form.validate_on_submit():
+        status = 'published' if request.form.get('action') == 'publish' else 'draft'
         page = Page(
             title=form.title.data,
             content=form.content.data,
             user_id=current_user.id,
-            status=form.status.data,
+            status=status,
         )
         db.session.add(page)
         db.session.commit()
@@ -169,9 +172,10 @@ def edit_page(page_id):
     page = db.get_or_404(Page, page_id)
     form = PageForm(obj=page)
     if form.validate_on_submit():
+        status = 'published' if request.form.get('action') == 'publish' else 'draft'
         page.title = form.title.data
         page.content = form.content.data
-        page.status = form.status.data
+        page.status = status
         db.session.commit()
         flash('Página actualizada.', 'success')
         return redirect(url_for('admin.pages'))

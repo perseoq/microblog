@@ -908,6 +908,13 @@ textarea {
   resize: vertical;
 }
 
+.cke_source {
+  color: var(--ink) !important;
+  background: var(--surface) !important;
+  caret-color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {

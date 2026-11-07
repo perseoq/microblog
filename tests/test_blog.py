@@ -82,6 +82,22 @@ def test_sanitizer_allows_media_embeds(app):
     assert '<script>' not in script
 
 
+def test_sanitizer_allows_safe_inline_styles(app):
+    sanitize = app.jinja_env.filters['safe_html']
+
+    styled = str(sanitize('<p style="text-align: center; color: #ff0000; font-size: 18px;">Hola</p>'))
+    assert 'text-align: center' in styled
+    assert '#ff0000' in styled
+    assert 'font-size: 18px' in styled
+
+    font_tag = str(sanitize('<font color="#00ff00" face="Arial" size="4">Hola</font>'))
+    assert '<font' in font_tag
+    assert '#00ff00' in font_tag
+
+    risky = str(sanitize('<p style="position: fixed; color: red;">x</p>'))
+    assert 'position' not in risky
+
+
 def test_category_and_tag_filters(client, content):
     assert client.get(f"/category/{content['category']}").status_code == 200
     assert client.get(f"/tag/{content['tag']}").status_code == 200

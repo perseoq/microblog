@@ -2,6 +2,7 @@ import os
 from urllib.parse import urlparse
 
 import bleach
+from bleach.css_sanitizer import CSSSanitizer
 from flask import Flask, request
 from markupsafe import Markup
 
@@ -41,12 +42,13 @@ ALLOWED_HTML_TAGS = [
     'p', 'br', 'hr', 'strong', 'b', 'em', 'i', 'u', 's', 'blockquote',
     'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'ul', 'ol', 'li', 'pre', 'code',
     'a', 'img', 'figure', 'figcaption', 'table', 'thead', 'tbody', 'tr',
-    'th', 'td', 'span', 'div', 'iframe',
+    'th', 'td', 'span', 'div', 'font', 'iframe',
 ]
 ALLOWED_HTML_ATTRIBUTES = {
-    '*': ['class'],
+    '*': ['class', 'style'],
     'a': ['href', 'title', 'target', 'rel'],
     'img': ['src', 'alt', 'title', 'width', 'height'],
+    'font': ['color', 'face', 'size'],
 }
 ALLOWED_IFRAME_ATTRIBUTES = {
     'src', 'width', 'height', 'allow', 'allowfullscreen', 'frameborder',
@@ -57,6 +59,10 @@ ALLOWED_EMBED_HOSTS = {
     'www.youtube-nocookie.com', 'open.spotify.com', 'instagram.com',
     'www.instagram.com', 'player.vimeo.com',
 }
+CSS_SANITIZER = CSSSanitizer(allowed_css_properties=[
+    'color', 'background-color', 'text-align', 'font-family', 'font-size',
+    'font-weight', 'font-style', 'text-decoration',
+])
 
 
 def _is_allowed_embed(value):
@@ -83,6 +89,7 @@ def sanitize_html(value):
         attributes=_allowed_attribute,
         protocols=['http', 'https', 'mailto'],
         strip=True,
+        css_sanitizer=CSS_SANITIZER,
     )
     return Markup(cleaned)
 

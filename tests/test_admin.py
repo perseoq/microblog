@@ -28,7 +28,7 @@ def test_post_crud(auth_client, category):
         'content': 'Cuerpo',
         'category': str(category),
         'tags': [],
-        'status': 'published',
+        'action': 'publish',
     }, follow_redirects=False)
     assert response.status_code == 302
     post = Post.query.filter_by(title='Nuevo').first()
@@ -39,7 +39,7 @@ def test_post_crud(auth_client, category):
         'content': 'Cuerpo 2',
         'category': str(category),
         'tags': [],
-        'status': 'published',
+        'action': 'publish',
     }, follow_redirects=False)
     assert response.status_code == 302
     assert db.session.get(Post, post.id).title == 'Editado'
@@ -56,7 +56,7 @@ def test_post_draft_and_inline_tags(auth_client, category):
         'category': str(category),
         'tags': [],
         'new_tags': 'flask, nuevo',
-        'status': 'draft',
+        'action': 'draft',
     }, follow_redirects=False)
     assert response.status_code == 302
 
@@ -72,7 +72,7 @@ def test_page_crud(auth_client):
     auth_client.post('/admin/pages/new', data={
         'title': 'Pagina',
         'content': 'x',
-        'status': 'published',
+        'action': 'publish',
     }, follow_redirects=False)
     page = Page.query.filter_by(title='Pagina').first()
     assert page is not None
@@ -80,12 +80,66 @@ def test_page_crud(auth_client):
     auth_client.post(f'/admin/pages/{page.id}/edit', data={
         'title': 'Pagina 2',
         'content': 'y',
-        'status': 'published',
+        'action': 'publish',
     }, follow_redirects=False)
     assert db.session.get(Page, page.id).title == 'Pagina 2'
 
     auth_client.post(f'/admin/pages/{page.id}/delete', follow_redirects=False)
     assert db.session.get(Page, page.id) is None
+
+
+def test_post_publish_and_draft_toggle(auth_client, category):
+    auth_client.post('/admin/posts/new', data={
+        'title': 'Alternar',
+        'content': 'Cuerpo',
+        'category': str(category),
+        'tags': [],
+        'action': 'publish',
+    }, follow_redirects=False)
+    post = Post.query.filter_by(title='Alternar').first()
+    assert post.status == 'published'
+
+    auth_client.post(f'/admin/posts/{post.id}/edit', data={
+        'title': 'Alternar',
+        'content': 'Cuerpo',
+        'category': str(category),
+        'tags': [],
+        'action': 'draft',
+    }, follow_redirects=False)
+    assert db.session.get(Post, post.id).status == 'draft'
+
+    auth_client.post(f'/admin/posts/{post.id}/edit', data={
+        'title': 'Alternar',
+        'content': 'Cuerpo',
+        'category': str(category),
+        'tags': [],
+        'action': 'publish',
+    }, follow_redirects=False)
+    assert db.session.get(Post, post.id).status == 'published'
+
+
+def test_pages_publish_and_draft_toggle(auth_client):
+    auth_client.post('/admin/pages/new', data={
+        'title': 'Alternar pagina',
+        'content': 'Cuerpo',
+        'action': 'publish',
+    }, follow_redirects=False)
+    page = Page.query.filter_by(title='Alternar pagina').first()
+    assert page.status == 'published'
+
+    auth_client.post(f'/admin/pages/{page.id}/edit', data={
+        'title': 'Alternar pagina',
+        'content': 'Cuerpo',
+        'action': 'draft',
+    }, follow_redirects=False)
+    assert db.session.get(Page, page.id).status == 'draft'
+
+    auth_client.post(f'/admin/pages/{page.id}/edit', data={
+        'title': 'Alternar pagina',
+        'content': 'Cuerpo',
+        'action': 'publish',
+    }, follow_redirects=False)
+    assert db.session.get(Page, page.id).status == 'published'
 
 
 def test_categories_and_tags(auth_client):
