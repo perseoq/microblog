@@ -53,3 +53,26 @@ def test_password_reset(client, app, user):
 def test_invalid_reset_token(client, user):
     response = client.get('/recover/token-invalido', follow_redirects=False)
     assert response.status_code == 302
+
+
+def test_recover_sends_email(client, user, monkeypatch):
+    sent = {}
+
+    def fake_send_message(subject, recipients, body):
+        sent['subject'] = subject
+        sent['recipients'] = recipients
+        sent['body'] = body
+
+    monkeypatch.setattr('blog.views.auth.mail.send_message', fake_send_message)
+    response = client.post('/recover', data={'email': 'ana@example.com'}, follow_redirects=False)
+    assert response.status_code == 302
+    assert sent['recipients'] == ['ana@example.com']
+    assert '/recover/' in sent['body']
+
+
+def test_recover_unknown_email_does_not_send(client, user, monkeypatch):
+    calls = []
+    monkeypatch.setattr('blog.views.auth.mail.send_message', lambda *a, **k: calls.append(1))
+    response = client.post('/recover', data={'email': 'nadie@example.com'}, follow_redirects=False)
+    assert response.status_code == 302
+    assert calls == []

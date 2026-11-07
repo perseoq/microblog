@@ -90,14 +90,15 @@ def recover():
             token = _reset_serializer().dumps(user.email)
             link = url_for('auth.reset_password', token=token, _external=True)
             body = f'Para restablecer tu contraseña visita: {link}'
-            if current_app.config.get('DEBUG'):
-                current_app.logger.info(body)
-            else:
+            try:
                 mail.send_message(
                     'Recuperación de contraseña - microblog',
                     recipients=[user.email],
                     body=body,
                 )
+            except Exception:
+                current_app.logger.exception('No se pudo enviar el correo de recuperación.')
+                current_app.logger.info('Enlace de recuperación: %s', link)
         flash('Si el correo está registrado, enviamos un enlace de recuperación.', 'info')
         return redirect(url_for('auth.login'))
     return render_template('auth/recovery.html', form=form)
