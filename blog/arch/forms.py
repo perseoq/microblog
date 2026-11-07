@@ -1,10 +1,9 @@
 from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed, FileRequired
+from flask_wtf.file import FileAllowed, FileRequired, MultipleFileField
 from wtforms import (
     BooleanField,
     EmailField,
-    FileField,
     PasswordField,
     SelectField,
     SelectMultipleField,
@@ -78,7 +77,7 @@ class UploadForm(FlaskForm):
     submit = SubmitField('Upload')
 
 class UploadImageForm(FlaskForm):
-    image = FileField('Image', validators=[FileRequired(), FileAllowed({'png', 'jpg', 'jpeg', 'gif', 'webp'}, 'Formato de imagen no permitido.')])
+    image = MultipleFileField('Images', validators=[FileRequired(), FileAllowed({'png', 'jpg', 'jpeg', 'gif', 'webp'}, 'Formato de imagen no permitido.')])
     submit = SubmitField('Upload')
 
 class ImageForm(FlaskForm):

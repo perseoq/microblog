@@ -68,8 +68,10 @@ def upload(gallery_id):
     album = db.get_or_404(Gallery, gallery_id)
     form = UploadImageForm()
     if form.validate_on_submit():
-        _save_image(form.image.data, album)
-        flash('Imagen subida.', 'success')
+        for storage in form.image.data:
+            _save_image(storage, album)
+        db.session.commit()
+        flash(f'{len(form.image.data)} imagen(es) subida(s).', 'success')
     else:
         flash('Archivo no válido. Usa: png, jpg, jpeg, gif o webp.', 'danger')
     return redirect(url_for('gallery.manage_gallery', gallery_id=album.id))
@@ -113,7 +115,6 @@ def _save_image(storage, album):
         user_id=current_user.id,
     )
     db.session.add(image)
-    db.session.commit()
 
 
 def _delete_image(image):

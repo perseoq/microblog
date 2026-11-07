@@ -3,11 +3,12 @@
 {% block content %}
 <h1>{{ gallery.title }}</h1>
 <p>{{ gallery.description or '' }}</p>
-<h2>Subir imagen</h2>
+<h2>Subir imágenes</h2>
+<p>Puedes seleccionar varias imágenes a la vez.</p>
 <form method="post" enctype="multipart/form-data" action="{{ url_for('gallery.upload', gallery_id=gallery.id) }}" novalidate>
     {{ form.hidden_tag() }}
     <p>
-        {{ form.image() }}
+        {{ form.image(multiple=True) }}
         {% for error in form.image.errors %}<span>{{ error }}</span>{% endfor %}
     </p>
     <p>{{ form.submit() }}</p>

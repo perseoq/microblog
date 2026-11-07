@@ -29,14 +29,18 @@ def test_image_upload_and_delete(auth_client, app, tmp_path):
 
     response = auth_client.post(
         f'/admin/galleries/{album.id}/upload',
-        data={'image': (io.BytesIO(b'\x89PNG datos'), 'foto.png')},
+        data={'image': [
+            (io.BytesIO(b'\x89PNG uno'), 'uno.png'),
+            (io.BytesIO(b'\x89PNG dos'), 'dos.png'),
+        ]},
         content_type='multipart/form-data',
         follow_redirects=False,
     )
     assert response.status_code == 302
-    image = Image.query.filter_by(gallery_id=album.id).first()
-    assert image is not None
-    assert (tmp_path / image.filename).exists()
+    images = Image.query.filter_by(gallery_id=album.id).order_by(Image.id).all()
+    assert len(images) == 2
+    for image in images:
+        assert (tmp_path / image.filename).exists()
 
     response = auth_client.post(
         f'/admin/galleries/{album.id}/upload',
@@ -45,13 +49,13 @@ def test_image_upload_and_delete(auth_client, app, tmp_path):
         follow_redirects=True,
     )
     assert 'Archivo no'.encode('utf-8') in response.data
-    assert Image.query.filter_by(gallery_id=album.id).count() == 1
+    assert Image.query.filter_by(gallery_id=album.id).count() == 2
 
-    image_id = image.id
-    filename = image.filename
-    auth_client.post(f'/admin/images/{image_id}/delete', follow_redirects=False)
-    assert db.session.get(Image, image_id) is None
-    assert not (tmp_path / filename).exists()
+    stored = [(image.id, image.filename) for image in images]
+    for image_id, filename in stored:
+        auth_client.post(f'/admin/images/{image_id}/delete', follow_redirects=False)
+        assert db.session.get(Image, image_id) is None
+        assert not (tmp_path / filename).exists()
 
     auth_client.post(f'/admin/galleries/{album.id}/delete', follow_redirects=False)
     assert db.session.get(Gallery, album.id) is None
