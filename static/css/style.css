@@ -1019,6 +1019,140 @@ td button:hover {
   margin-bottom: 0;
 }
 
+.page-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.page-header h1 {
+  margin: 0;
+}
+
+.page-subtitle {
+  color: var(--muted);
+  margin: 4px 0 0;
+}
+
+.admin-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.inline-form {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: none;
+  margin: 0;
+}
+
+.inline-form-field {
+  flex: 1;
+  min-width: 0;
+}
+
+.inline-form-field input[type="text"] {
+  margin-top: 0;
+}
+
+.inline-form input[type="submit"] {
+  flex: none;
+}
+
+.simple-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+}
+
+.simple-list-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.simple-list-row:last-child {
+  border-bottom: none;
+}
+
+.simple-list-row:hover {
+  background: var(--surface-alt);
+}
+
+.simple-list-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-count {
+  background: var(--surface-alt);
+  color: var(--muted);
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: .78rem;
+  white-space: nowrap;
+}
+
+.icon-form {
+  display: inline-flex;
+  margin: 0;
+  max-width: none;
+  gap: 0;
+}
+
+.icon-button-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  line-height: 0;
+}
+
+.icon-button-danger:hover {
+  background: var(--danger-soft);
+  color: var(--danger);
+  border-color: var(--danger);
+}
+
+.icon-button-danger svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 560px) {
+  .inline-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .simple-list-row {
+    flex-wrap: wrap;
+  }
+}
+
 .galleries article {
   padding: 20px 0;
   border-bottom: 1px solid var(--line);

@@ -1,28 +1,43 @@
 {% extends 'base/base_admin.html' %}
 {% block title %}Etiquetas{% endblock %}
 {% block content %}
-<h1>Etiquetas</h1>
-<form method="post" action="{{ url_for('admin.tags') }}">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.name(size=40, placeholder='Nombre de la etiqueta') }}
+<div class="page-header">
+    <div>
+        <h1>Etiquetas</h1>
+        <p class="page-subtitle">Clasifica las publicaciones con palabras clave.</p>
+    </div>
+    <span class="count-badge">{{ tags|length }}</span>
+</div>
+
+<section class="admin-card">
+    <form method="post" action="{{ url_for('admin.tags') }}" class="inline-form" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="inline-form-field">
+            {{ form.name(size=40, placeholder='Nueva etiqueta') }}
+            {% for error in form.name.errors %}<span class="form-error">{{ error }}</span>{% endfor %}
+        </div>
         {{ form.submit() }}
-    </p>
-    {% for error in form.name.errors %}<span>{{ error }}</span>{% endfor %}
-</form>
+    </form>
+</section>
+
 {% if tags %}
-    <ul>
+    <ul class="simple-list">
         {% for tag in tags %}
-            <li>
-                {{ tag.name }}
-                <form method="post" action="{{ url_for('admin.delete_tag', tag_id=tag.id) }}">
+            <li class="simple-list-row">
+                <span class="simple-list-name">{{ tag.name }}</span>
+                <span class="list-count">{{ tag.posts|length }} posts</span>
+                <form method="post" action="{{ url_for('admin.delete_tag', tag_id=tag.id) }}" class="icon-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button type="submit">Eliminar</button>
+                    <button type="submit" class="icon-button-danger" aria-label="Eliminar etiqueta {{ tag.name }}" title="Eliminar etiqueta">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                            <path d="M18 6 6 18M6 6l12 12"></path>
+                        </svg>
+                    </button>
                 </form>
             </li>
         {% endfor %}
     </ul>
 {% else %}
-    <p>No hay etiquetas.</p>
+    <div class="empty-state"><p>No hay etiquetas todavía.</p></div>
 {% endif %}
 {% endblock %}

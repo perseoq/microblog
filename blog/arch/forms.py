@@ -40,11 +40,11 @@ class InstallForm(FlaskForm):
 
 class CategoryForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(max=50)])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Añadir')
 
 class TagForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(max=50)])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Añadir')
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(max=100)])

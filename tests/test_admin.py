@@ -78,6 +78,19 @@ def test_categories_and_tags(auth_client):
     assert Tag.query.filter_by(name='nueva').first() is None
 
 
+def test_lists_render_icon_delete(auth_client):
+    auth_client.post('/admin/categories', data={'name': 'IconCat'}, follow_redirects=False)
+    auth_client.post('/admin/tags', data={'name': 'IconTag'}, follow_redirects=False)
+
+    categories = auth_client.get('/admin/categories')
+    assert categories.status_code == 200
+    assert 'Eliminar categoría IconCat'.encode('utf-8') in categories.data
+
+    tags = auth_client.get('/admin/tags')
+    assert tags.status_code == 200
+    assert 'Eliminar etiqueta IconTag'.encode('utf-8') in tags.data
+
+
 def test_profile_and_password(auth_client, user):
     response = auth_client.post('/admin/profile', data={
         'username': 'ana2',
