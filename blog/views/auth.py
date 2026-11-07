@@ -32,7 +32,7 @@ def _clear_pending_2fa():
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('blog.index'))
+        return redirect(url_for('admin.dashboard'))
     limit_key = f"login:{request.remote_addr or 'unknown'}"
     if request.method == 'POST' and is_rate_limited(limit_key, limit=10, window=300):
         flash('Demasiados intentos. Espera unos minutos e inténtalo de nuevo.', 'danger')
@@ -50,7 +50,7 @@ def login():
                 session[PENDING_2FA_REMEMBER] = bool(form.remember_me.data)
                 return redirect(url_for('auth.verify_2fa'))
             login_user(user, remember=form.remember_me.data)
-            return redirect(url_for('blog.index'))
+            return redirect(url_for('admin.dashboard'))
         flash('Correo o contraseña inválidos.', 'danger')
     return render_template('auth/login.html', form=form)
 
@@ -58,7 +58,7 @@ def login():
 @auth.route('/login/2fa', methods=['GET', 'POST'])
 def verify_2fa():
     if current_user.is_authenticated:
-        return redirect(url_for('blog.index'))
+        return redirect(url_for('admin.dashboard'))
     user_id = session.get(PENDING_2FA_USER)
     started = session.get(PENDING_2FA_AT, 0)
     if not user_id or time.time() - started > PENDING_2FA_MAX_AGE:
@@ -82,7 +82,7 @@ def verify_2fa():
             remember = session.get(PENDING_2FA_REMEMBER, False)
             _clear_pending_2fa()
             login_user(user, remember=remember)
-            return redirect(url_for('blog.index'))
+            return redirect(url_for('admin.dashboard'))
         flash('Código de verificación inválido.', 'danger')
     return render_template('auth/verify_2fa.html', form=form)
 
@@ -97,7 +97,7 @@ def logout():
 @auth.route('/recover', methods=['GET', 'POST'])
 def recover():
     if current_user.is_authenticated:
-        return redirect(url_for('blog.index'))
+        return redirect(url_for('admin.dashboard'))
     limit_key = f"recover:{request.remote_addr or 'unknown'}"
     if request.method == 'POST' and is_rate_limited(limit_key, limit=5, window=900):
         flash('Demasiados intentos. Espera unos minutos e inténtalo de nuevo.', 'danger')

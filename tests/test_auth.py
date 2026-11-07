@@ -33,8 +33,16 @@ def test_login_and_logout(client, user):
         'password': 'secret123',
     }, follow_redirects=False)
     assert response.status_code == 302
+    assert response.headers['Location'].endswith('/admin/')
     response = client.get('/logout', follow_redirects=False)
     assert response.status_code == 302
+
+
+def test_authenticated_blog_hides_admin_links(auth_client):
+    home = auth_client.get('/')
+    assert home.status_code == 200
+    assert b'/admin/' not in home.data
+    assert b'/gallery' not in home.data
 
 
 def test_password_reset(client, app, user):
