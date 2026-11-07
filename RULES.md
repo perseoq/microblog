@@ -88,6 +88,8 @@ microblog/
     │   ├── _post_list.html
     │   ├── home.html
     │   ├── index.html
+    │   ├── categories.html
+    │   ├── pages_index.html
     │   ├── posts.html
     │   ├── pages.html
     │   ├── gallery.html

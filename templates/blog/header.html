@@ -2,6 +2,8 @@
     <nav>
         <a href="{{ url_for('blog.index') }}">Inicio</a>
         <a href="{{ url_for('gallery.index') }}">Galería</a>
+        <a href="{{ url_for('blog.categories') }}">Categorías</a>
+        <a href="{{ url_for('pages.index') }}">Páginas</a>
         <form action="{{ url_for('blog.search') }}" method="get">
             <input type="search" name="q" placeholder="Buscar" value="{{ request.args.get('q', '') }}">
             <button type="submit">Buscar</button>
@@ -10,8 +12,6 @@
             <span>{{ current_user.username }}</span>
             <a href="{{ url_for('admin.dashboard') }}">Panel</a>
             <a href="{{ url_for('auth.logout') }}">Salir</a>
-        {% else %}
-            <a href="{{ url_for('auth.login') }}">Entrar</a>
         {% endif %}
     </nav>
 </header>

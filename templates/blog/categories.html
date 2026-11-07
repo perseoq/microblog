@@ -1,0 +1,21 @@
+{% extends 'base/base_blog.html' %}
+{% block title %}Categorías{% endblock %}
+{% block content %}
+<section class="posts">
+    <h1>Categorías</h1>
+    {% if categories %}
+        <ul class="taxonomy-list">
+            {% for category in categories %}
+                <li class="taxonomy-item">
+                    <a href="{{ url_for('blog.category', category_id=category.id) }}">{{ category.name }}</a>
+                    <span class="sidebar-count">{{ category.posts|length }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="empty-state">
+            <p>No hay categorías todavía.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

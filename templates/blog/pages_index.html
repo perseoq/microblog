@@ -1,0 +1,21 @@
+{% extends 'base/base_blog.html' %}
+{% block title %}Páginas{% endblock %}
+{% block content %}
+<section class="posts">
+    <h1>Páginas</h1>
+    {% if pages %}
+        <ul class="taxonomy-list">
+            {% for page in pages %}
+                <li class="taxonomy-item">
+                    <a href="{{ url_for('pages.detail', page_id=page.id) }}">{{ page.title }}</a>
+                    <span class="taxonomy-meta">{{ page.date_posted.strftime('%d/%m/%Y') }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="empty-state">
+            <p>No hay páginas todavía.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

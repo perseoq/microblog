@@ -20,6 +20,11 @@ def index():
     return render_template('blog/home.html', posts=posts, **_sidebar_data())
 
 
+@blog.route('/categories')
+def categories():
+    return render_template('blog/categories.html', **_sidebar_data())
+
+
 @blog.route('/search')
 def search():
     query = request.args.get('q', '').strip()
