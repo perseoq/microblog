@@ -10,7 +10,7 @@ class Config:
     MAIL_USE_TLS = MAIL_USE_TLS
     MAIL_USE_SSL = MAIL_USE_SSL
     MAIL_DEFAULT_SENDER = MAIL_DEFAULT_SENDER
-    MAX_CONTENT_LENGTH = 20 * 1024 * 1024
+    MAX_CONTENT_LENGTH = None
     UPLOAD_IMAGE_FOLDER = 'uploads/imgs'
     ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
     CKEDITOR_SERVE_LOCAL = True
