@@ -2107,6 +2107,14 @@ a.stat-card:hover {
   gap: 10px;
 }
 
+.themes-toolbar {
+  margin-bottom: 16px;
+}
+
+.themes-toolbar input[type="search"] {
+  max-width: 320px;
+}
+
 .themes-form {
   display: grid;
   gap: 20px;
@@ -2116,7 +2124,7 @@ a.stat-card:hover {
 
 .theme-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
   gap: 10px;
 }
 
@@ -2124,30 +2132,37 @@ a.stat-card:hover {
   position: relative;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
   gap: 8px;
+  width: 100%;
   padding: 8px;
   background: var(--surface);
+  color: var(--ink);
+  text-align: left;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   cursor: pointer;
+  font: inherit;
 }
 
 .theme-card:hover,
-.theme-card.is-active,
-.theme-card:has(input:checked) {
+.theme-card.is-active {
   border-color: var(--accent);
   box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
-.theme-card:focus-within {
+.theme-card.is-active {
+  background: var(--surface-alt);
+}
+
+.theme-card:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
 
-.theme-card input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
+.theme-card[hidden] {
+  display: none;
 }
 
 .theme-preview {
@@ -2158,20 +2173,51 @@ a.stat-card:hover {
 
 .theme-swatch {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 56px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  height: 64px;
+  padding: 7px 9px;
   border-radius: var(--radius-sm);
-  font-family: var(--font-heading);
-  font-size: 1.1rem;
+}
+
+.theme-mode {
+  color: inherit;
+  opacity: .65;
+  font-size: .6rem;
   font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.theme-aa {
+  align-self: flex-end;
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 .theme-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
   padding: 0 2px 2px;
   color: var(--ink-soft);
   font-size: .82rem;
   font-weight: 600;
+}
+
+.theme-active {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
 }
 
 @media (max-width: 900px) {

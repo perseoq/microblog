@@ -136,7 +136,10 @@ def test_site_config_update(auth_client):
 
 
 def test_themes_page_and_apply(auth_client):
-    assert auth_client.get('/admin/themes').status_code == 200
+    page = auth_client.get('/admin/themes')
+    assert page.status_code == 200
+    assert b'name="theme"' in page.data
+    assert b'Aplicar tema' not in page.data
 
     response = auth_client.post('/admin/themes', data={'theme': 'dracula'}, follow_redirects=False)
     assert response.status_code == 302

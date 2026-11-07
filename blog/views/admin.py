@@ -314,7 +314,7 @@ def themes():
         if name in THEMES:
             config.theme = name
             db.session.commit()
-            flash('Tema aplicado.', 'success')
+            flash(f'Tema «{THEMES[name]["label"]}» aplicado.', 'success')
             return redirect(url_for('admin.themes'))
         flash('Tema no válido.', 'danger')
     return render_template(

@@ -3,32 +3,41 @@
 {% block content %}
 <div class="page-header">
     <div>
-        <h1>Temas</h1>
-        <p class="page-subtitle">Elige la paleta del blog. Afecta al modo claro y oscuro.</p>
+        <h1>Temas <span class="count-badge">{{ themes|length }}</span></h1>
+        <p class="page-subtitle">Haz clic en un tema para aplicarlo al instante.</p>
     </div>
-    <span class="status-badge is-on">Actual: {{ current_label }}</span>
+    <span class="status-badge is-on">Activo: {{ current_label }}</span>
+</div>
+
+<div class="themes-toolbar">
+    <input type="search" placeholder="Buscar tema" data-theme-filter aria-label="Buscar tema">
 </div>
 
 <form method="post" class="themes-form">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
     <div class="theme-grid">
         {% for theme in themes %}
-            <label class="theme-card {% if theme.name == current %}is-active{% endif %}">
-                <input type="radio" name="theme" value="{{ theme.name }}" {% if theme.name == current %}checked{% endif %}>
+            <button type="submit" name="theme" value="{{ theme.name }}" data-name="{{ theme.name }} {{ theme.label|lower }}" class="theme-card {% if theme.name == current %}is-active{% endif %}" title="Aplicar {{ theme.label }}">
                 <span class="theme-preview">
                     <span class="theme-swatch" style="background: {{ theme.light.paper }}; color: {{ theme.light.ink }};">
-                        <span style="color: {{ theme.light.accent }};">Aa</span>
+                        <span class="theme-mode">Claro</span>
+                        <span class="theme-aa" style="color: {{ theme.light.accent }};">Aa</span>
                     </span>
                     <span class="theme-swatch" style="background: {{ theme.dark.paper }}; color: {{ theme.dark.ink }};">
-                        <span style="color: {{ theme.dark.accent }};">Aa</span>
+                        <span class="theme-mode">Oscuro</span>
+                        <span class="theme-aa" style="color: {{ theme.dark.accent }};">Aa</span>
                     </span>
                 </span>
-                <span class="theme-name">{{ theme.label }}</span>
-            </label>
+                <span class="theme-name">
+                    {{ theme.label }}
+                    {% if theme.name == current %}<span class="theme-active">Activo</span>{% endif %}
+                </span>
+            </button>
         {% endfor %}
     </div>
-    <div class="form-actions">
-        <button type="submit" class="button">Aplicar tema</button>
+    <div class="empty-state" data-theme-empty hidden>
+        <p>No hay temas que coincidan.</p>
     </div>
 </form>
 {% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='js/themes.js') }}" defer></script>{% endblock %}
