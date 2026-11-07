@@ -41,13 +41,16 @@ def upgrade():
 
     bind = op.get_bind()
     cipher = _cipher()
-    rows = bind.execute(sa.text('SELECT id, totp_secret FROM "user" WHERE totp_secret IS NOT NULL')).fetchall()
+    quoted_user = bind.dialect.identifier_preparer.quote_identifier('user')
+    rows = bind.execute(
+        sa.text(f'SELECT id, totp_secret FROM {quoted_user} WHERE totp_secret IS NOT NULL')
+    ).fetchall()
     for user_id, secret in rows:
         if not secret:
             continue
         encrypted = cipher.process_bind_param(secret, bind.dialect)
         bind.execute(
-            sa.text('UPDATE "user" SET totp_secret = :secret WHERE id = :id'),
+            sa.text(f'UPDATE {quoted_user} SET totp_secret = :secret WHERE id = :id'),
             {'secret': encrypted, 'id': user_id},
         )
 
@@ -55,7 +58,10 @@ def upgrade():
 def downgrade():
     bind = op.get_bind()
     cipher = _cipher()
-    rows = bind.execute(sa.text('SELECT id, totp_secret FROM "user" WHERE totp_secret IS NOT NULL')).fetchall()
+    quoted_user = bind.dialect.identifier_preparer.quote_identifier('user')
+    rows = bind.execute(
+        sa.text(f'SELECT id, totp_secret FROM {quoted_user} WHERE totp_secret IS NOT NULL')
+    ).fetchall()
     for user_id, secret in rows:
         if not secret:
             continue
@@ -64,7 +70,7 @@ def downgrade():
         except Exception:
             plain = secret
         bind.execute(
-            sa.text('UPDATE "user" SET totp_secret = :secret WHERE id = :id'),
+            sa.text(f'UPDATE {quoted_user} SET totp_secret = :secret WHERE id = :id'),
             {'secret': plain, 'id': user_id},
         )
 
