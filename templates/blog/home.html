@@ -1,11 +1,13 @@
 {% extends 'base/base_blog.html' %}
 {% block title %}microblog{% endblock %}
-{% block content %}
+{% block hero %}
 <section class="home-hero">
     <p class="eyebrow">Blog</p>
     <h1>microblog</h1>
     <p class="home-lead">Ideas, notas y tutoriales sobre desarrollo, diseño y tecnología.</p>
 </section>
+{% endblock %}
+{% block content %}
 
 <div class="home-main">
     {% if posts %}
